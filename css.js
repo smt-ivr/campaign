@@ -178,16 +178,40 @@ body {
 .sa-error { border-color: #e53e3e; }
 .sa-error::before { content: '✗'; font-size: 35px; color: #e53e3e; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
+/* כפתור אזור אישי */
+.personal-area-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--dark-blue);
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.personal-area-btn:hover {
+    background: var(--gold);
+    transform: scale(1.05);
+}
+
 /* הגדרות כיוון שפה באנגלית (LTR) */
 [dir="ltr"] .solicitor-item { text-align: left; }
 [dir="ltr"] .sol-percent { text-align: right; }
 [dir="ltr"] .floating-symbol { right: auto; left: 15px; }
 [dir="ltr"] .hero-amount-input { padding: 12px 12px 12px 40px; }
 [dir="ltr"] .scroll-list { padding-right: 0; padding-left: 5px; }
+[dir="ltr"] .personal-area-btn { right: auto; left: 20px; }
 
 @media (max-width: 900px) {
     body { overflow: auto; padding: 10px; height: auto; }
-    .main-card { flex-direction: column; max-height: none; display: flex; }
+    .main-card { flex-direction: column; max-height: none; display: flex; margin-top: 50px; }
     .info-panel, .info-content { display: contents; }
     .info-content h1 { background: var(--dark-blue); color: var(--gold); margin: 0; padding: 25px 15px 5px 15px; order: 1; font-size: 1.6rem; }
     .elegant-stats { background: var(--dark-blue); color: white; margin: 0; padding: 0 15px 25px 15px; order: 2; gap: 12px; }
