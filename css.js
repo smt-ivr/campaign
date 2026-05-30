@@ -96,7 +96,7 @@ body {
 .donate-panel h2 { margin: 0 0 10px 0; font-size: 1.3rem; color: var(--dark-blue); font-weight: 800; }
 
 .amount-wrapper { display: flex; gap: 15px; margin-bottom: 12px; align-items: stretch; }
-.currency-toggle { display: flex; background: #e2e8f0; border-radius: 8px; overflow: hidden; border: 2px solid var(--border); }
+.currency-toggle { display: flex; background: #e2e8f0; border-radius: 8px; overflow: hidden; border: 2px solid var(--border); transition: 0.3s; }
 .curr-btn {
     flex: 1; padding: 0 18px; font-size: 1.5rem; font-weight: 800; cursor: pointer;
     border: none; background: transparent; color: var(--text-light); transition: 0.3s;
@@ -178,9 +178,9 @@ body {
 .sa-error { border-color: #e53e3e; }
 .sa-error::before { content: '✗'; font-size: 35px; color: #e53e3e; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
-/* כפתור אזור אישי - תוקן כך שיהיה מקובע למעלה תמיד */
+/* כפתור אזור אישי - תוקן ל-absolute כדי שיישאר למעלה ולא יפריע בגלילה בנייד */
 .personal-area-btn {
-    position: fixed !important;
+    position: absolute !important;
     top: 20px !important;
     right: 20px !important;
     background: var(--dark-blue);
@@ -229,4 +229,5 @@ body {
 @media (max-width: 480px) {
     .compact-form { grid-template-columns: 1fr; }
     #comment, #fname, #lname, #phone, #zeout, #email, #solicitor-select { grid-column: span 1; }
-}`;
+}
+`;
