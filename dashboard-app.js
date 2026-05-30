@@ -182,17 +182,21 @@ function generateLink() {
     // בסיס הקישור
     let link = lang === "en" ? baseUrl + "/en?id=" + currentSolicitorId : baseUrl + "?id=" + currentSolicitorId;
     
-    // הוספת מטבע אם נבחר
+    // הוספת מטבע
     const currency = document.getElementById("link-currency").value;
     if (currency) link += "&currency=" + currency;
     
-    // הוספת סכום קבוע אם הוקלד
+    // הוספת נעילת מטבע
+    const isLockedCurrency = document.getElementById("link-lock-currency").checked;
+    if (isLockedCurrency && currency) link += "&lock_currency=1";
+    
+    // הוספת סכום קבוע
     const amount = document.getElementById("link-amount").value;
     if (amount && amount > 0) link += "&amount=" + amount;
     
     // הוספת נעילת סכום
-    const isLocked = document.getElementById("link-lock").checked;
-    if (isLocked && amount) link += "&lock_amount=1";
+    const isLockedAmount = document.getElementById("link-lock").checked;
+    if (isLockedAmount && amount) link += "&lock_amount=1";
     
     document.getElementById("personal-link").value = link;
 }
