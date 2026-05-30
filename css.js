@@ -32,8 +32,8 @@ body {
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     display: flex;
     overflow: hidden;
-    height: 620px; /* גודל קבוע לאתר הראשי */
-    max-height: 95vh; /* התאמה למסכים נמוכים */
+    height: auto; /* חזר לגובה הטבעי והמקורי */
+    max-height: 95vh;
     width: 100%;
 }
 
@@ -41,11 +41,19 @@ body {
     width: 32%; background: var(--dark-blue); color: white;
     padding: 25px 20px; display: flex; flex-direction: column;
     text-align: center;
-    height: 100%; /* תופס את מלוא הגובה הקבוע */
 }
-.info-content h1 { margin: 0 0 15px 0; font-size: 1.5rem; font-weight: 800; color: var(--gold); }
 
-.elegant-stats { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 15px; }
+/* שרשרת הגמישות שמאפשרת גלילה פנימית בלבד */
+.info-content { 
+    display: flex; 
+    flex-direction: column; 
+    flex: 1; 
+    min-height: 0; 
+}
+
+.info-content h1 { margin: 0 0 15px 0; font-size: 1.5rem; font-weight: 800; color: var(--gold); flex-shrink: 0; }
+
+.elegant-stats { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 15px; flex-shrink: 0; }
 .stat-circle { width: 100px; }
 .circular-chart { display: block; margin: 0 auto; max-width: 100%; max-height: 250px; }
 .circle-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 2.5; }
@@ -68,14 +76,20 @@ body {
 @keyframes fadeInBreakdown { 0% { opacity: 0; transform: translateY(-5px); } 100% { opacity: 1; transform: translateY(0); } }
 
 .mini-leaderboard { 
-    flex: 1 1 0; /* שומר על גבולות התיבה ולא מרחיב אותה */
-    min-height: 0; /* חובה כדי שהגלילה הפנימית תעבוד נכון ולא תדחף את האתר */
     display: flex; 
     flex-direction: column; 
+    flex: 1; 
+    min-height: 0; 
     overflow: hidden; 
 }
-.mini-leaderboard h3 { font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 8px; text-align: center; }
-.scroll-list { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
+.mini-leaderboard h3 { font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 8px; text-align: center; flex-shrink: 0; }
+
+.scroll-list { 
+    overflow-y: auto; 
+    flex: 1; 
+    min-height: 0; 
+    padding-right: 5px; 
+}
 .scroll-list::-webkit-scrollbar { width: 4px; }
 .scroll-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
 
@@ -186,7 +200,7 @@ body {
 .sa-error { border-color: #e53e3e; }
 .sa-error::before { content: '✗'; font-size: 35px; color: #e53e3e; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
-/* כפתור אזור אישי - תוקן ל-absolute כדי שיישאר למעלה ולא יפריע בגלילה בנייד */
+/* כפתור אזור אישי - absolute גורם לכך שיישאר למעלה ולא יעקוב אחרי הגלילה */
 .personal-area-btn {
     position: absolute !important;
     top: 20px !important;
