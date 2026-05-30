@@ -7,22 +7,22 @@ export default {
         const url = new URL(request.url);
         const path = url.pathname;
 
-        // הגשת דף הבית
-        if (path === '/' || path === '/index.html') {
+        // הגשת דף הבית (תומך בכל הוריאציות של נתיב הקמפיין)
+        if (path === '/' || path === '/index.html' || path === '/campaign' || path === '/campaign/' || path === '/campaign/index.html') {
             return new Response(htmlContent, {
                 status: 200,
                 headers: { 'Content-Type': 'text/html; charset=utf-8' }
             });
         } 
         // הגשת קובץ הסטייל
-        else if (path === '/style.css') {
+        else if (path === '/style.css' || path === '/campaign/style.css') {
             return new Response(cssContent, {
                 status: 200,
                 headers: { 'Content-Type': 'text/css; charset=utf-8' }
             });
         } 
         // הגשת קובץ הלוגיקה של צד הלקוח
-        else if (path === '/app.js') {
+        else if (path === '/app.js' || path === '/campaign/app.js') {
             return new Response(jsContent, {
                 status: 200,
                 headers: { 'Content-Type': 'application/javascript; charset=utf-8' }
