@@ -21,7 +21,7 @@ export const dashboardHtml = `<!DOCTYPE html>
 
             <div id="login-form" class="auth-form">
                 <h2>כניסת מתרים</h2>
-                <input type="text" id="login-phone" placeholder="מספר טלפון">
+                <input type="text" id="login-identifier" placeholder="אימייל / טלפון / מספר מתרים">
                 <input type="password" id="login-pass" placeholder="סיסמה">
                 <button onclick="doLogin()" class="action-btn">היכנס</button>
                 <p id="login-err" class="err-msg"></p>
@@ -30,8 +30,8 @@ export const dashboardHtml = `<!DOCTYPE html>
             <div id="register-form" class="auth-form" style="display:none;">
                 <h2>פתיחת יעד חדש</h2>
                 <input type="text" id="reg-name" placeholder="שם מלא (יוצג בקמפיין)">
+                <input type="email" id="reg-email" placeholder="אימייל (חובה)">
                 <input type="text" id="reg-phone" placeholder="מספר טלפון">
-                <input type="email" id="reg-email" placeholder="אימייל">
                 <input type="password" id="reg-pass" placeholder="בחר סיסמה">
                 <button onclick="doRegister()" class="action-btn">הירשם</button>
                 <p id="reg-err" class="err-msg"></p>
