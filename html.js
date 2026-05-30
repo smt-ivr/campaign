@@ -4,7 +4,7 @@ export const htmlContent = `<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>קמפיין</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/campaign/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -96,6 +96,6 @@ export const htmlContent = `<!DOCTYPE html>
         <button class="modal-btn" onclick="closeModal()">אישור</button>
     </div>
 
-    <script src="/app.js"></script>
+    <script src="/campaign/app.js"></script>
 </body>
 </html>`;
