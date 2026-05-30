@@ -47,8 +47,7 @@ body {
 .info-content { 
     display: flex; 
     flex-direction: column; 
-    flex: 1; 
-    min-height: 0; 
+    flex-grow: 1; 
 }
 
 .info-content h1 { margin: 0 0 15px 0; font-size: 1.5rem; font-weight: 800; color: var(--gold); flex-shrink: 0; }
@@ -75,19 +74,30 @@ body {
 .animate-fade-in { animation: fadeInBreakdown 0.8s ease-out forwards; opacity: 0; }
 @keyframes fadeInBreakdown { 0% { opacity: 0; transform: translateY(-5px); } 100% { opacity: 1; transform: translateY(0); } }
 
+/* אזור המתרימים - הוגדר כמיקום יחסי כדי להכיל את הרשימה האבסולוטית */
 .mini-leaderboard { 
     display: flex; 
     flex-direction: column; 
-    flex: 1; 
-    min-height: 0; 
+    flex-grow: 1; 
+    position: relative; 
     overflow: hidden; 
 }
-.mini-leaderboard h3 { font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 8px; text-align: center; flex-shrink: 0; }
+.mini-leaderboard h3 { 
+    font-size: 1.05rem; 
+    border-bottom: 1px solid rgba(255,255,255,0.2); 
+    padding-bottom: 8px; 
+    margin: 0; /* איפוס שוליים */
+    text-align: center; 
+    height: 32px; /* גובה קבוע לכותרת */
+}
 
+/* רשימת המתרימים - הוצאה לחלוטין מחישובי הגובה של הדפדפן */
 .scroll-list { 
-    flex: 1; 
-    height: 0; /* קריטי: מונע מרשימת המתרימים למתוח את הקלף הראשי לאחר הטעינה */
-    min-height: 0; 
+    position: absolute; 
+    top: 40px; /* מתחיל בדיוק מתחת לכותרת */
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
     overflow-y: auto; 
     padding-right: 5px; 
 }
@@ -201,7 +211,6 @@ body {
 .sa-error { border-color: #e53e3e; }
 .sa-error::before { content: '✗'; font-size: 35px; color: #e53e3e; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
-/* כפתור אזור אישי - absolute גורם לכך שיישאר למעלה ולא יעקוב אחרי הגלילה */
 .personal-area-btn {
     position: absolute !important;
     top: 20px !important;
@@ -224,7 +233,6 @@ body {
     transform: scale(1.05);
 }
 
-/* הגדרות כיוון שפה באנגלית (LTR) */
 [dir="ltr"] .solicitor-item { text-align: left; }
 [dir="ltr"] .sol-percent { text-align: right; }
 [dir="ltr"] .floating-symbol { right: auto; left: 15px; }
@@ -232,6 +240,7 @@ body {
 [dir="ltr"] .scroll-list { padding-right: 0; padding-left: 5px; }
 [dir="ltr"] .personal-area-btn { right: auto !important; left: 20px !important; }
 
+/* התאמה לנייד */
 @media (max-width: 900px) {
     body { overflow: auto; padding: 10px; height: auto; }
     .main-card { flex-direction: column; max-height: none; height: auto; display: flex; margin-top: 50px; }
@@ -242,12 +251,14 @@ body {
     .currency-breakdown { margin: 8px 0; }
     .currency-badge { padding: 4px 10px; font-size: 0.9rem; }
     .donate-panel { width: 100%; order: 3; padding: 25px 20px; background: var(--card-bg); }
-    .mini-leaderboard { display: flex !important; width: 100%; order: 4; background: var(--dark-blue); color: white; padding: 25px 20px; flex: none; min-height: auto; }
     
-    /* הגבלת גובה אזור המתרימים בנייד, כדי שלא יעשה דף ארוך מדי */
-    .scroll-list { max-height: 250px; height: auto; flex: none; } 
+    /* בנייד מחזירים את האזור להיות חלק רגיל מהדף כדי שלא יעלה על דברים אחרים */
+    .mini-leaderboard { display: flex !important; width: 100%; order: 4; background: var(--dark-blue); color: white; padding: 25px 20px; position: static; }
+    .mini-leaderboard h3 { color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.2); margin-top: 0; margin-bottom: 10px; height: auto; }
     
-    .mini-leaderboard h3 { color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.2); margin-top: 0; }
+    /* מחזירים את הרשימה לזרימה רגילה עם הגבלת גובה */
+    .scroll-list { position: static; max-height: 250px; } 
+    
     .solicitor-item { border-bottom: 1px solid rgba(255,255,255,0.1); }
     .sol-stats { color: #e2e8f0; }
     .compact-form { grid-template-columns: repeat(2, 1fr); }
