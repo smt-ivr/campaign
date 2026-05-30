@@ -10,17 +10,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-function switchTab(tab) {
-    document.getElementById("login-form").style.display = tab === "login" ? "block" : "none";
-    document.getElementById("register-form").style.display = tab === "register" ? "block" : "none";
-    const btns = document.querySelectorAll(".tab-btn");
-    btns[0].className = tab === "login" ? "tab-btn active" : "tab-btn";
-    btns[1].className = tab === "register" ? "tab-btn active" : "tab-btn";
+function switchAuth(type) {
+    document.getElementById("login-form").style.display = type === "login" ? "block" : "none";
+    document.getElementById("register-form").style.display = type === "register" ? "block" : "none";
 }
 
 function showAuth() {
     document.getElementById("auth-section").style.display = "block";
     document.getElementById("manage-section").style.display = "none";
+    switchAuth('login');
 }
 
 function showDashboard() {
@@ -64,10 +62,15 @@ async function doRegister() {
     const name = document.getElementById("reg-name").value.trim();
     const email = document.getElementById("reg-email").value.trim();
     const phone = document.getElementById("reg-phone").value.trim();
+    const target = document.getElementById("reg-target").value.trim();
     const pass = document.getElementById("reg-pass").value.trim();
+    const passConfirm = document.getElementById("reg-pass-confirm").value.trim();
     const errEl = document.getElementById("reg-err");
 
-    if (!name || !email || !pass) { errEl.innerText = "שם, אימייל וסיסמה הם חובה"; return; }
+    if (!name || !email || !pass || !target) { errEl.innerText = "יש למלא את כל שדות החובה (שם, אימייל, יעד וסיסמה)"; return; }
+    if (pass !== passConfirm) { errEl.innerText = "הסיסמאות אינן תואמות!"; return; }
+    if (target <= 0) { errEl.innerText = "היעד חייב להיות גדול מ-0"; return; }
+    
     errEl.innerText = "פותח יעד...";
 
     try {
@@ -75,7 +78,7 @@ async function doRegister() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                name: name, email: email, phone: phone, password: pass, confirm_password: pass, target_amount: 5000
+                name: name, email: email, phone: phone, password: pass, confirm_password: passConfirm, target_amount: parseFloat(target)
             })
         });
         const data = await res.json();
@@ -117,7 +120,6 @@ async function loadDashboardData() {
             document.getElementById("dash-raised").innerText = "₪" + (myData.total_raised || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             document.getElementById("dash-target").innerText = "₪" + (myData.target || 0).toLocaleString("en-US");
             
-            // עדכון נתונים מורחבים מהשרת
             if (document.getElementById("dash-ils")) document.getElementById("dash-ils").innerText = "₪" + (myData.total_ils || 0).toLocaleString("en-US");
             if (document.getElementById("dash-usd")) document.getElementById("dash-usd").innerText = "$" + (myData.total_usd || 0).toLocaleString("en-US");
             
@@ -125,7 +127,6 @@ async function loadDashboardData() {
             if (document.getElementById("dash-progress")) document.getElementById("dash-progress").style.width = Math.min(perc, 100) + "%";
             if (document.getElementById("dash-percentage")) document.getElementById("dash-percentage").innerText = perc + "%";
             
-            // עדכון רשימת תרומות
             const listEl = document.getElementById("donations-list");
             if (listEl) {
                 if (myData.donations && myData.donations.length > 0) {
@@ -150,7 +151,7 @@ async function loadDashboardData() {
                     });
                     listEl.innerHTML = html;
                 } else {
-                    listEl.innerHTML = '<p style="text-align:center; color:#718096; font-size:0.9rem;">עדיין אין תרומות ליעד זה.</p>';
+                    listEl.innerHTML = '<p style="text-align:center; color:#718096; font-size:1rem; margin-top: 40px;">עדיין אין תרומות ליעד זה.</p>';
                 }
             }
 
@@ -180,7 +181,7 @@ async function updateTarget() {
             msgEl.innerText = "היעד עודכן בהצלחה!";
             document.getElementById("dash-target").innerText = "₪" + parseInt(newTarget).toLocaleString("en-US");
             document.getElementById("new-target-val").value = "";
-            loadDashboardData(); // טעינה מחדש כדי לעדכן אחוזים
+            loadDashboardData();
             setTimeout(() => { msgEl.innerText = ""; }, 3000);
         } else {
             msgEl.style.color="red"; msgEl.innerText = data.message || "שגיאה בעדכון";
