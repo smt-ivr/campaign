@@ -9,12 +9,16 @@ export const htmlContent = `<!DOCTYPE html>
 </head>
 <body>
 
-    <a href="/campaign/dashboard" class="personal-area-btn" title="כניסה למתרימים">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-    </a>
+    <div class="top-controls">
+        <button class="lang-switch" onclick="toggleLanguage()" id="lang-toggle">English</button>
+        <a href="/campaign/dashboard" class="personal-area-btn" title="כניסה למתרימים">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span data-i18n="personalArea">אזור אישי מתרימים</span>
+        </a>
+    </div>
 
     <div class="elegant-wrapper">
         <main class="main-card">
@@ -45,6 +49,10 @@ export const htmlContent = `<!DOCTYPE html>
                             
                             <div class="target"><span data-i18n="raisedFrom">מתוך</span> <span id="target-amount">₪0</span></div>
                         </div>
+                    </div>
+
+                    <div class="recommendation-wrapper" onclick="showImage('https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png')" title="לחץ להגדלה">
+                        <img src="https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png" alt="המלצה" class="recommendation-img">
                     </div>
 
                     <div class="mini-leaderboard">
@@ -96,7 +104,7 @@ export const htmlContent = `<!DOCTYPE html>
     <div class="sweet-alert" id="custom-modal">
         <div class="sa-icon" id="modal-icon"></div>
         <h3 id="modal-title"></h3>
-        <p id="modal-text"></p>
+        <div id="modal-text"></div>
         <button class="modal-btn" onclick="closeModal()">OK</button>
     </div>
 
