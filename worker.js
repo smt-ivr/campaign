@@ -7,8 +7,18 @@ export default {
         const url = new URL(request.url);
         const path = url.pathname;
 
-        // הגשת דף הבית (תומך בכל הוריאציות של נתיב הקמפיין)
-        if (path === '/' || path === '/index.html' || path === '/campaign' || path === '/campaign/' || path === '/campaign/index.html') {
+        // הגשת דף הבית כולל נתיבי שפות
+        if (
+            path === '/' || 
+            path === '/index.html' || 
+            path === '/campaign' || 
+            path === '/campaign/' || 
+            path === '/campaign/index.html' || 
+            path === '/campaign/en' || 
+            path === '/campaign/en/' || 
+            path === '/campaign/he' || 
+            path === '/campaign/he/'
+        ) {
             return new Response(htmlContent, {
                 status: 200,
                 headers: { 'Content-Type': 'text/html; charset=utf-8' }
