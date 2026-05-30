@@ -113,7 +113,15 @@ body {
 .link-box { background: #ebf8ff; padding: 20px; border-radius: 12px; border: 1px solid #90cdf4; text-align: center; }
 .link-box h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: #2b6cb0; }
 .link-box p { font-size: 0.95rem; color: #4a5568; margin-top: 0; margin-bottom: 15px; }
-.link-box input { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; text-align: center; direction: ltr; margin-bottom: 15px; color: #2d3748; background: white; font-size: 1.05rem; font-weight: 600; }
+
+/* מחולל הקישורים - עיצוב חדש */
+.link-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; text-align: right; }
+.link-options select, .link-options input[type="number"] { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-family: inherit; font-size: 0.95rem; background: white; outline: none; }
+.link-options select:focus, .link-options input:focus { border-color: #3182ce; }
+.lock-label { grid-column: span 2; font-size: 0.9rem; color: #4a5568; display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; justify-content: flex-start; }
+.lock-label input { width: auto; margin: 0; transform: scale(1.2); }
+
+.link-box > input[type="text"] { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; text-align: center; direction: ltr; margin-bottom: 15px; color: #2d3748; background: white; font-size: 1.05rem; font-weight: 600; outline: none; }
 .copy-btn { width: 100%; padding: 12px; background: #3182ce; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: inherit; font-size: 1.05rem; transition: 0.2s; }
 .copy-btn:hover { background: #2b6cb0; }
 
@@ -131,4 +139,9 @@ body {
 .d-amount { font-weight: 900; color: #38a169; font-size: 1.1rem; }
 .d-footer { display: flex; flex-direction: column; font-size: 0.85rem; color: #718096; gap: 4px; }
 .d-comment { font-style: italic; color: #4a5568; background: #edf2f7; padding: 6px 10px; border-radius: 6px; margin-top: 4px; display: inline-block; }
+
+@media (max-width: 480px) {
+    .link-options { grid-template-columns: 1fr; }
+    .lock-label { grid-column: span 1; }
+}
 `;
