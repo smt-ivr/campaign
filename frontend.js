@@ -166,6 +166,16 @@ function parseUrlParameters() {
         updateCurrencyVisuals(currParam);
     }
 
+    // נעילת מטבע
+    const lockCurrParam = urlParams.get('lock_currency');
+    if ((lockCurrParam === '1' || lockCurrParam === 'true') && currParam) {
+        const toggleEl = document.querySelector('.currency-toggle');
+        if (toggleEl) {
+            toggleEl.style.pointerEvents = 'none';
+            toggleEl.style.opacity = '0.7';
+        }
+    }
+
     // נעילת סכום
     const lockParam = urlParams.get('lock_amount');
     if ((lockParam === '1' || lockParam === 'true') && amountEl) {
