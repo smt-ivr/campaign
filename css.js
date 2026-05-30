@@ -32,14 +32,16 @@ body {
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     display: flex;
     overflow: hidden;
-    height: auto;
-    max-height: 95vh;
+    height: 620px; /* גודל קבוע לאתר הראשי */
+    max-height: 95vh; /* התאמה למסכים נמוכים */
+    width: 100%;
 }
 
 .info-panel {
     width: 32%; background: var(--dark-blue); color: white;
     padding: 25px 20px; display: flex; flex-direction: column;
     text-align: center;
+    height: 100%; /* תופס את מלוא הגובה הקבוע */
 }
 .info-content h1 { margin: 0 0 15px 0; font-size: 1.5rem; font-weight: 800; color: var(--gold); }
 
@@ -65,7 +67,13 @@ body {
 .animate-fade-in { animation: fadeInBreakdown 0.8s ease-out forwards; opacity: 0; }
 @keyframes fadeInBreakdown { 0% { opacity: 0; transform: translateY(-5px); } 100% { opacity: 1; transform: translateY(0); } }
 
-.mini-leaderboard { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+.mini-leaderboard { 
+    flex: 1 1 0; /* שומר על גבולות התיבה ולא מרחיב אותה */
+    min-height: 0; /* חובה כדי שהגלילה הפנימית תעבוד נכון ולא תדחף את האתר */
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden; 
+}
 .mini-leaderboard h3 { font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 8px; text-align: center; }
 .scroll-list { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
 .scroll-list::-webkit-scrollbar { width: 4px; }
@@ -211,7 +219,7 @@ body {
 
 @media (max-width: 900px) {
     body { overflow: auto; padding: 10px; height: auto; }
-    .main-card { flex-direction: column; max-height: none; display: flex; margin-top: 50px; }
+    .main-card { flex-direction: column; max-height: none; height: auto; display: flex; margin-top: 50px; }
     .info-panel, .info-content { display: contents; }
     .info-content h1 { background: var(--dark-blue); color: var(--gold); margin: 0; padding: 25px 15px 5px 15px; order: 1; font-size: 1.6rem; }
     .elegant-stats { background: var(--dark-blue); color: white; margin: 0; padding: 0 15px 25px 15px; order: 2; gap: 12px; }
@@ -219,7 +227,11 @@ body {
     .currency-breakdown { margin: 8px 0; }
     .currency-badge { padding: 4px 10px; font-size: 0.9rem; }
     .donate-panel { width: 100%; order: 3; padding: 25px 20px; background: var(--card-bg); }
-    .mini-leaderboard { display: flex !important; width: 100%; order: 4; background: var(--dark-blue); color: white; padding: 25px 20px; }
+    .mini-leaderboard { display: flex !important; width: 100%; order: 4; background: var(--dark-blue); color: white; padding: 25px 20px; flex: none; min-height: auto; }
+    
+    /* הגבלת גובה אזור המתרימים בנייד, כדי שלא יעשה דף ארוך מדי */
+    .scroll-list { max-height: 250px; } 
+    
     .mini-leaderboard h3 { color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.2); margin-top: 0; }
     .solicitor-item { border-bottom: 1px solid rgba(255,255,255,0.1); }
     .sol-stats { color: #e2e8f0; }
