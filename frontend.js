@@ -169,7 +169,7 @@ function parseUrlParameters() {
     // נעילת מטבע
     const lockCurrParam = urlParams.get('lock_currency');
     if ((lockCurrParam === '1' || lockCurrParam === 'true') && currParam) {
-        const toggleEl = document.querySelector('.currency-toggle');
+        const toggleEl = document.getElementById('currency-toggle');
         if (toggleEl) {
             toggleEl.style.pointerEvents = 'none';
             toggleEl.style.opacity = '0.7';
@@ -198,15 +198,11 @@ function parseUrlParameters() {
 
 function updateCurrencyVisuals(val) {
     selectedCurrency = val;
-    const symbol = val === '2' ? '$' : '₪';
     
     document.querySelectorAll('.curr-btn').forEach(btn => {
         if(btn.dataset.val === val) btn.classList.add('active');
         else btn.classList.remove('active');
     });
-    
-    const floatingSymbol = document.querySelector('.floating-symbol');
-    if(floatingSymbol) floatingSymbol.innerText = symbol;
     
     document.getElementById('custom-amount').dispatchEvent(new Event('input'));
 }
