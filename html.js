@@ -14,7 +14,7 @@ export const htmlContent = `<!DOCTYPE html>
             
             <section class="info-panel">
                 <div class="info-content">
-                    <h1 id="campaign-title">טוען...</h1>
+                    <h1 id="campaign-title" data-i18n="loadingTitle">טוען...</h1>
                     
                     <div class="elegant-stats">
                         <div class="stat-circle">
