@@ -31,8 +31,9 @@ body {
     border-radius: var(--radius);
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     display: flex;
+    align-items: stretch;
     overflow: hidden;
-    height: auto; /* חזר לגובה הטבעי והמקורי */
+    height: auto;
     max-height: 95vh;
     width: 100%;
 }
@@ -43,7 +44,6 @@ body {
     text-align: center;
 }
 
-/* שרשרת הגמישות שמאפשרת גלילה פנימית בלבד */
 .info-content { 
     display: flex; 
     flex-direction: column; 
@@ -85,9 +85,10 @@ body {
 .mini-leaderboard h3 { font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 8px; text-align: center; flex-shrink: 0; }
 
 .scroll-list { 
-    overflow-y: auto; 
     flex: 1; 
+    height: 0; /* קריטי: מונע מרשימת המתרימים למתוח את הקלף הראשי לאחר הטעינה */
     min-height: 0; 
+    overflow-y: auto; 
     padding-right: 5px; 
 }
 .scroll-list::-webkit-scrollbar { width: 4px; }
@@ -244,7 +245,7 @@ body {
     .mini-leaderboard { display: flex !important; width: 100%; order: 4; background: var(--dark-blue); color: white; padding: 25px 20px; flex: none; min-height: auto; }
     
     /* הגבלת גובה אזור המתרימים בנייד, כדי שלא יעשה דף ארוך מדי */
-    .scroll-list { max-height: 250px; } 
+    .scroll-list { max-height: 250px; height: auto; flex: none; } 
     
     .mini-leaderboard h3 { color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.2); margin-top: 0; }
     .solicitor-item { border-bottom: 1px solid rgba(255,255,255,0.1); }
