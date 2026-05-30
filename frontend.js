@@ -101,7 +101,7 @@ function initLanguage() {
     if (currentLang === 'en') {
         document.documentElement.lang = 'en';
         document.documentElement.dir = 'ltr';
-        selectedCurrency = '2'; // דולר כברירת מחדל לאנגלית
+        selectedCurrency = '2'; 
         updateCurrencyVisuals('2');
     }
 
@@ -142,7 +142,7 @@ function parseUrlParameters() {
 
     if (isSolicitorRequired) {
         const sel = document.getElementById('solicitor-select');
-        sel.innerHTML = \`<option value="">\${t('loadingSolicitors')}</option>\`;
+        sel.innerHTML = '<option value="">' + t('loadingSolicitors') + '</option>';
     }
 
     const amountParam = urlParams.get('amount');
@@ -185,29 +185,29 @@ function updateCurrencyVisuals(val) {
 
 async function fetchCampaignInfo() {
     try {
-        const res = await fetch(\`\${API_BASE_URL}/info\`);
+        const res = await fetch(API_BASE_URL + '/info');
         const result = await res.json();
         
         if (result.status === 'success') {
             const data = result.data;
             document.getElementById('campaign-title').innerText = data.campaign_name || 'Campaign';
-            document.getElementById('target-amount').innerText = \`₪\${data.target.toLocaleString('en-US')}\`;
+            document.getElementById('target-amount').innerText = '₪' + data.target.toLocaleString('en-US');
             
-            document.getElementById('total-raised').innerText = \`₪\${formatMoney(data.total_raised)}\`;
+            document.getElementById('total-raised').innerText = '₪' + formatMoney(data.total_raised);
             
             const ilsBadge = document.getElementById('total-ils-badge');
             const usdBadge = document.getElementById('total-usd-badge');
             
-            if(ilsBadge) ilsBadge.innerText = \`₪\${formatMoney(data.total_ils || 0)}\`;
-            if(usdBadge) usdBadge.innerText = \`$\${formatMoney(data.total_usd || 0)}\`;
+            if(ilsBadge) ilsBadge.innerText = '₪' + formatMoney(data.total_ils || 0);
+            if(usdBadge) usdBadge.innerText = '$' + formatMoney(data.total_usd || 0);
 
             const percentage = data.percentage || 0;
             setTimeout(() => {
                 const circle = document.getElementById('progress-circle');
-                if (circle) circle.setAttribute('stroke-dasharray', \`\${percentage}, 100\`);
+                if (circle) circle.setAttribute('stroke-dasharray', percentage + ', 100');
                 
                 const text = document.getElementById('progress-text');
-                if (text) text.textContent = \`\${percentage}%\`;
+                if (text) text.textContent = percentage + '%';
             }, 100);
         }
     } catch (err) { console.error(err); }
@@ -215,7 +215,7 @@ async function fetchCampaignInfo() {
 
 async function fetchSolicitors() {
     try {
-        const res = await fetch(\`\${API_BASE_URL}/solicitors\`);
+        const res = await fetch(API_BASE_URL + '/solicitors');
         const result = await res.json();
         
         if (result.status === 'success') {
@@ -223,7 +223,7 @@ async function fetchSolicitors() {
             const selectEl = document.getElementById('solicitor-select');
             listEl.innerHTML = '';
             
-            if (!isSolicitorRequired) selectEl.innerHTML = \`<option value="">\${t('selectSolicitor')}</option>\`;
+            if (!isSolicitorRequired) selectEl.innerHTML = '<option value="">' + t('selectSolicitor') + '</option>';
             else selectEl.innerHTML = ''; 
             
             result.data.sort((a, b) => b.raised - a.raised).forEach(sol => {
@@ -231,32 +231,32 @@ async function fetchSolicitors() {
                 const percentage = sol.percentage || 0;
                 const visualPercentage = percentage > 100 ? 100 : percentage;
                 
-                listEl.innerHTML += \`
-                    <div class="solicitor-item">
-                        <div class="sol-info">
-                            <span class="sol-name">\${sol.name}</span>
-                            <span class="sol-stats">
-                                <span class="sol-total">₪\${formatMoney(sol.raised)}</span> \${t('raisedFrom')} ₪\${target.toLocaleString('en-US')}
-                            </span>
-                        </div>
-                        <div class="sol-breakdown">
-                            <span class="sol-badge-ils">₪\${formatMoney(sol.raised_ils)}</span>
-                            <span class="sol-badge-usd">$\${formatMoney(sol.raised_usd)}</span>
-                        </div>
-                        <div class="sol-progress">
-                            <div class="sol-progress-bar">
-                                <div class="sol-progress-fill" style="width: \${visualPercentage}%;"></div>
-                            </div>
-                            <span class="sol-percent">\${percentage}%</span>
-                        </div>
-                    </div>\`;
+                listEl.innerHTML += 
+                    '<div class="solicitor-item">' +
+                        '<div class="sol-info">' +
+                            '<span class="sol-name">' + sol.name + '</span>' +
+                            '<span class="sol-stats">' +
+                                '<span class="sol-total">₪' + formatMoney(sol.raised) + '</span> ' + t('raisedFrom') + ' ₪' + target.toLocaleString('en-US') +
+                            '</span>' +
+                        '</div>' +
+                        '<div class="sol-breakdown">' +
+                            '<span class="sol-badge-ils">₪' + formatMoney(sol.raised_ils) + '</span>' +
+                            '<span class="sol-badge-usd">$' + formatMoney(sol.raised_usd) + '</span>' +
+                        '</div>' +
+                        '<div class="sol-progress">' +
+                            '<div class="sol-progress-bar">' +
+                                '<div class="sol-progress-fill" style="width: ' + visualPercentage + '%;"></div>' +
+                            '</div>' +
+                            '<span class="sol-percent">' + percentage + '%</span>' +
+                        '</div>' +
+                    '</div>';
                     
-                selectEl.innerHTML += \`<option value="\${sol.id}">\${sol.name}</option>\`;
+                selectEl.innerHTML += '<option value="' + sol.id + '">' + sol.name + '</option>';
             });
 
             if (isSolicitorRequired) {
                 let found = result.data.find(s => s.id == lockedSolicitorId);
-                if (!found) selectEl.innerHTML += \`<option value="\${lockedSolicitorId}">\${t('solPrefix')} \${lockedSolicitorId}</option>\`;
+                if (!found) selectEl.innerHTML += '<option value="' + lockedSolicitorId + '">' + t('solPrefix') + ' ' + lockedSolicitorId + '</option>';
                 
                 selectEl.value = lockedSolicitorId;
                 selectEl.disabled = true;
@@ -275,7 +275,7 @@ async function fetchSolicitors() {
 
 async function fetchDonationConfig() {
     try {
-        const res = await fetch(\`\${API_BASE_URL}/donation-info\`);
+        const res = await fetch(API_BASE_URL + '/donation-info');
         const result = await res.json();
         if (result.status === 'success') {
             campaignConfig.mosadId = result.data.mosad_id;
@@ -341,11 +341,11 @@ function setupEventListeners() {
 
         if (amount > 0 && amount >= minAmountLimit) {
             currentDonationAmount = amount;
-            payBtn.innerText = \`\${t('paySecure')} \${symbol}\${amount.toLocaleString()}\`;
+            payBtn.innerText = t('paySecure') + ' ' + symbol + amount.toLocaleString();
             payBtn.disabled = false;
         } else if (amount > 0 && amount < minAmountLimit) {
             currentDonationAmount = 0;
-            payBtn.innerText = \`\${t('minAmount')} \${symbol}\${minAmountLimit}\`;
+            payBtn.innerText = t('minAmount') + ' ' + symbol + minAmountLimit;
             payBtn.disabled = true;
         } else {
             currentDonationAmount = 0;
@@ -360,7 +360,7 @@ function setupEventListeners() {
 function initIframe() {
     const iframe = document.getElementById('NedarimFrame');
     const nedarimLang = currentLang === 'en' ? 'en' : 'he';
-    iframe.src = \`https://matara.pro/nedarimplus/iframe?language=${nedarimLang}&v=\${Date.now()}\`;
+    iframe.src = 'https://matara.pro/nedarimplus/iframe?language=' + nedarimLang + '&v=' + Date.now();
     iframe.onload = () => {
         if (iframe.src !== "about:blank") iframe.contentWindow.postMessage({'Name': 'GetHeight'}, "*");
     };
@@ -393,7 +393,7 @@ function processPayment() {
     let rawComment = document.getElementById('comment').value || '';
     const solSelect = document.getElementById('solicitor-select');
     const solName = solSelect.options[solSelect.selectedIndex]?.text || '';
-    if (solSelect.value) rawComment += \` | Solicitor: \${solName}\`;
+    if (solSelect.value) rawComment += ' | Solicitor: ' + solName;
 
     const iframe = document.getElementById('NedarimFrame');
     iframe.contentWindow.postMessage({
@@ -413,7 +413,7 @@ function processPayment() {
             'Param1': solSelect.value, 
             'PaymentType': 'Ragil',
             'Currency': selectedCurrency, 
-            'CallBack': \`\${API_BASE_URL}/webhook\`
+            'CallBack': API_BASE_URL + '/webhook'
         }
     }, "*");
 }
@@ -431,10 +431,10 @@ window.addEventListener('message', function(event) {
         if (event.data.Value.Status === 'Error') {
             showModal(t('errPay'), event.data.Value.Message, 'error');
             const symbol = selectedCurrency === '2' ? '$' : '₪';
-            payBtn.innerText = \`\${t('paySecure')} \${symbol}\${currentDonationAmount.toLocaleString()}\`;
+            payBtn.innerText = t('paySecure') + ' ' + symbol + currentDonationAmount.toLocaleString();
             payBtn.disabled = false;
         } else {
-            showModal(t('successTitle'), \`\${t('successMsg')} \${event.data.Value.TransactionId}\`, 'success');
+            showModal(t('successTitle'), t('successMsg') + ' ' + event.data.Value.TransactionId, 'success');
             resetForm();
             fetchCampaignInfo(); 
             fetchSolicitors();   
@@ -466,7 +466,7 @@ function resetForm() {
 function showModal(title, text, type) {
     document.getElementById('modal-title').innerText = title;
     document.getElementById('modal-text').innerText = text;
-    document.getElementById('modal-icon').className = \`sa-icon sa-\${type}\`;
+    document.getElementById('modal-icon').className = 'sa-icon sa-' + type;
     document.getElementById('modal-overlay').classList.add('show');
     document.getElementById('custom-modal').classList.add('show');
 }
