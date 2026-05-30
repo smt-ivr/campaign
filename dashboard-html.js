@@ -81,8 +81,25 @@ export const dashboardHtml = `<!DOCTYPE html>
                         </div>
 
                         <div class="link-box">
-                            <h3>הקישור האישי שלך</h3>
-                            <p>שתף את הקישור הזה כדי שתרומות יכנסו ישירות ליעד שלך:</p>
+                            <h3>מחולל קישור אישי לתרומות</h3>
+                            <p>בנה לעצמך קישור כדי שתרומות יכנסו ישירות ליעד שלך:</p>
+                            
+                            <div class="link-options">
+                                <select id="link-lang" onchange="generateLink()">
+                                    <option value="he">שפה: עברית</option>
+                                    <option value="en">שפה: אנגלית (EN)</option>
+                                </select>
+                                <select id="link-currency" onchange="generateLink()">
+                                    <option value="">מטבע: ברירת מחדל</option>
+                                    <option value="1">שקלים (₪)</option>
+                                    <option value="2">דולרים ($)</option>
+                                </select>
+                                <input type="number" id="link-amount" placeholder="הגדר סכום קבוע (לא חובה)" oninput="generateLink()">
+                                <label class="lock-label">
+                                    <input type="checkbox" id="link-lock" onchange="generateLink()"> נעל סכום (כדי שלא יוכלו לשנות)
+                                </label>
+                            </div>
+
                             <input type="text" id="personal-link" readonly>
                             <button onclick="copyLink()" class="copy-btn">העתק קישור</button>
                         </div>
