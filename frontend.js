@@ -40,7 +40,8 @@ const translations = {
         errPay: "שגיאה בתשלום",
         successTitle: "תזכו למצוות!",
         successMsg: "התרומה התקבלה בהצלחה.\\nאישור עסקה:",
-        solPrefix: "מתרים"
+        solPrefix: "מתרים",
+        personalArea: "אזור אישי מתרימים"
     },
     en: {
         loadingTitle: "Loading...",
@@ -69,7 +70,8 @@ const translations = {
         errPay: "Payment Error",
         successTitle: "Thank You!",
         successMsg: "Donation received successfully.\\nTransaction ID:",
-        solPrefix: "Solicitor"
+        solPrefix: "Solicitor",
+        personalArea: "Solicitor Login"
     }
 };
 
@@ -112,6 +114,7 @@ function initLanguage() {
     }
 
     applyTranslations();
+    updateLangButton();
 }
 
 function applyTranslations() {
@@ -133,7 +136,6 @@ function applyTranslations() {
 function parseUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
     
-    // שליפת מתרים
     const idParam = urlParams.get('id') || urlParams.get('solicitor');
     if (idParam) {
         lockedSolicitorId = parseInt(idParam);
@@ -152,7 +154,6 @@ function parseUrlParameters() {
         if (sel) sel.innerHTML = '<option value="">' + t('loadingSolicitors') + '</option>';
     }
 
-    // סכום קבוע
     const amountParam = urlParams.get('amount');
     const amountEl = document.getElementById('custom-amount');
     if (amountParam && amountEl) {
@@ -160,13 +161,11 @@ function parseUrlParameters() {
         currentDonationAmount = parseFloat(amountParam);
     }
 
-    // מטבע
     const currParam = urlParams.get('currency');
     if (currParam) {
         updateCurrencyVisuals(currParam);
     }
 
-    // נעילת מטבע
     const lockCurrParam = urlParams.get('lock_currency');
     if ((lockCurrParam === '1' || lockCurrParam === 'true') && currParam) {
         const toggleEl = document.getElementById('currency-toggle');
@@ -176,7 +175,6 @@ function parseUrlParameters() {
         }
     }
 
-    // נעילת סכום
     const lockParam = urlParams.get('lock_amount');
     if ((lockParam === '1' || lockParam === 'true') && amountEl) {
         amountEl.disabled = true;
@@ -187,7 +185,6 @@ function parseUrlParameters() {
         minAmountLimit = parseFloat(minParam);
     }
 
-    // מחיקת ה-ID מה-URL כדי שיראה נקי (אך עדיין שמור בזיכרון)
     if (window.history.replaceState && idParam) {
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.delete('id');
@@ -501,4 +498,40 @@ function closeModal() {
     document.getElementById('modal-overlay').classList.remove('show');
     document.getElementById('custom-modal').classList.remove('show');
 }
+
+/* ======== פונקציות חדשות (החלפת שפה והצגת תמונה) ======== */
+window.toggleLanguage = function() {
+    const newLang = currentLang === 'he' ? 'en' : 'he';
+    localStorage.setItem('campaign_lang', newLang);
+    
+    currentLang = newLang;
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+    
+    // החלפת מטבע אוטומטית בהחלפת שפה
+    selectedCurrency = currentLang === 'en' ? '2' : '1'; 
+    updateCurrencyVisuals(selectedCurrency);
+    
+    applyTranslations();
+    updateLangButton();
+    
+    // רענון טופס הסליקה (Nedarim) לשפה החדשה
+    document.getElementById('iframe-loader').style.display = 'flex';
+    initIframe();
+};
+
+function updateLangButton() {
+    const btn = document.getElementById('lang-toggle');
+    if(btn) {
+        btn.innerText = currentLang === 'he' ? 'English' : 'עברית';
+    }
+}
+
+window.showImage = function(src) {
+    document.getElementById('modal-title').innerText = '';
+    document.getElementById('modal-text').innerHTML = '<img src="' + src + '" style="max-width:100%; border-radius:8px; display:block; margin:0 auto;">';
+    document.getElementById('modal-icon').className = ''; 
+    document.getElementById('modal-overlay').classList.add('show');
+    document.getElementById('custom-modal').classList.add('show');
+};
 `;
