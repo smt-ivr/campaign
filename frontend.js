@@ -114,7 +114,7 @@ function initLanguage() {
     }
 
     applyTranslations();
-    updateLangButton();
+    updateLangButtons();
 }
 
 function applyTranslations() {
@@ -499,31 +499,38 @@ function closeModal() {
     document.getElementById('custom-modal').classList.remove('show');
 }
 
-/* ======== פונקציות חדשות (החלפת שפה והצגת תמונה) ======== */
-window.toggleLanguage = function() {
-    const newLang = currentLang === 'he' ? 'en' : 'he';
-    localStorage.setItem('campaign_lang', newLang);
-    
-    currentLang = newLang;
+/* ======== לוגיקת החלפת שפה ותמונה ======== */
+window.setLanguage = function(lang) {
+    if (currentLang === lang) return; 
+
+    localStorage.setItem('campaign_lang', lang);
+    currentLang = lang;
     document.documentElement.lang = currentLang;
     document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
     
-    // החלפת מטבע אוטומטית בהחלפת שפה
+    // החלפת מטבע בהתאם לשפה
     selectedCurrency = currentLang === 'en' ? '2' : '1'; 
     updateCurrencyVisuals(selectedCurrency);
     
     applyTranslations();
-    updateLangButton();
+    updateLangButtons();
     
-    // רענון טופס הסליקה (Nedarim) לשפה החדשה
+    // רענון טופס סליקה
     document.getElementById('iframe-loader').style.display = 'flex';
     initIframe();
 };
 
-function updateLangButton() {
-    const btn = document.getElementById('lang-toggle');
-    if(btn) {
-        btn.innerText = currentLang === 'he' ? 'English' : 'עברית';
+function updateLangButtons() {
+    const btnHe = document.getElementById('btn-lang-he');
+    const btnEn = document.getElementById('btn-lang-en');
+    if (btnHe && btnEn) {
+        if (currentLang === 'he') {
+            btnHe.classList.add('active');
+            btnEn.classList.remove('active');
+        } else {
+            btnEn.classList.add('active');
+            btnHe.classList.remove('active');
+        }
     }
 }
 
