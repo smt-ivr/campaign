@@ -293,31 +293,30 @@ async function fetchDonationConfig() {
     } catch (err) { console.error(err); }
 }
 
-function isValidIsraeliID(id) {
-    id = String(id).trim();
-    if (id.length > 9 || isNaN(id)) return false;
-    id = id.length < 9 ? ("00000000" + id).slice(-9) : id;
-    let sum = 0;
-    for (let i = 0; i < id.length; i++) {
-        let incNum = Number(id[i]) * ((i % 2) + 1);
-        sum += incNum > 9 ? incNum - 9 : incNum;
-    }
-    return sum % 10 === 0;
-}
-
 function validateField(inputEl, type) {
     const val = inputEl.value.trim();
     if (val === '') { inputEl.classList.remove('input-error'); return true; }
     
     let isValid = true;
-    if (type === 'email') isValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(val);
-    else if (type === 'phone') isValid = /^0[2-9]\\d{7,8}$/.test(val.replace(/[-]/g, ''));
-    else if (type === 'zeout') isValid = isValidIsraeliID(val);
+    
+    if (type === 'email') {
+        isValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(val);
+    } 
+    else if (type === 'phone') {
+        // מאשר כל טקסט או מספר באורך 5 תווים לפחות (טלפונים, קידומות, מקפים וכו')
+        isValid = val.length >= 5; 
+    } 
+    else if (type === 'zeout') {
+        // מאשר רק מספרים (ללא הגבלת אורך או ספרת ביקורת)
+        isValid = /^[0-9]+$/.test(val); 
+    }
 
     if (!isValid) {
-        inputEl.classList.add('input-error'); return false;
+        inputEl.classList.add('input-error'); 
+        return false;
     } else {
-        inputEl.classList.remove('input-error'); return true;
+        inputEl.classList.remove('input-error'); 
+        return true;
     }
 }
 
