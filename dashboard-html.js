@@ -95,8 +95,12 @@ export const dashboardHtml = `<!DOCTYPE html>
                                     <option value="2">דולרים ($)</option>
                                 </select>
                                 <input type="number" id="link-amount" placeholder="הגדר סכום קבוע (לא חובה)" oninput="generateLink()">
+                                
                                 <label class="lock-label">
-                                    <input type="checkbox" id="link-lock" onchange="generateLink()"> נעל סכום (כדי שלא יוכלו לשנות)
+                                    <input type="checkbox" id="link-lock-currency" onchange="generateLink()"> נעל מטבע
+                                </label>
+                                <label class="lock-label">
+                                    <input type="checkbox" id="link-lock" onchange="generateLink()"> נעל סכום
                                 </label>
                             </div>
 
