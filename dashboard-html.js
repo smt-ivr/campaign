@@ -1,0 +1,79 @@
+export const dashboardHtml = `<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אזור מתרימים</title>
+    <link rel="stylesheet" href="/campaign/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <a href="/campaign" class="back-btn">חזרה לקמפיין</a>
+
+    <div class="dashboard-wrapper">
+        
+        <div id="auth-section" class="dash-card">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">התחברות</button>
+                <button class="tab-btn" onclick="switchTab('register')">הרשמה</button>
+            </div>
+
+            <div id="login-form" class="auth-form">
+                <h2>כניסת מתרים</h2>
+                <input type="text" id="login-phone" placeholder="מספר טלפון">
+                <input type="password" id="login-pass" placeholder="סיסמה">
+                <button onclick="doLogin()" class="action-btn">היכנס</button>
+                <p id="login-err" class="err-msg"></p>
+            </div>
+
+            <div id="register-form" class="auth-form" style="display:none;">
+                <h2>פתיחת יעד חדש</h2>
+                <input type="text" id="reg-name" placeholder="שם מלא (יוצג בקמפיין)">
+                <input type="text" id="reg-phone" placeholder="מספר טלפון">
+                <input type="email" id="reg-email" placeholder="אימייל">
+                <input type="password" id="reg-pass" placeholder="בחר סיסמה">
+                <button onclick="doRegister()" class="action-btn">הירשם</button>
+                <p id="reg-err" class="err-msg"></p>
+            </div>
+        </div>
+
+        <div id="manage-section" class="dash-card" style="display:none;">
+            <div class="user-header">
+                <h2 id="dash-name">שלום מתרים</h2>
+                <button onclick="doLogout()" class="logout-btn">התנתק</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span>סך הכל גויס</span>
+                    <strong id="dash-raised">₪0</strong>
+                </div>
+                <div class="stat-box">
+                    <span>יעד נוכחי</span>
+                    <strong id="dash-target">₪0</strong>
+                </div>
+            </div>
+
+            <div class="update-target-box">
+                <h3>עדכון יעד גיוס</h3>
+                <div class="target-input-row">
+                    <input type="number" id="new-target-val" placeholder="הכנס יעד חדש">
+                    <button onclick="updateTarget()" class="update-btn">עדכן יעד</button>
+                </div>
+                <p id="target-msg" class="success-msg"></p>
+            </div>
+
+            <div class="link-box">
+                <h3>הקישור האישי שלך</h3>
+                <p>שתף את הקישור הזה כדי שתרומות יכנסו ישירות ליעד שלך:</p>
+                <input type="text" id="personal-link" readonly>
+                <button onclick="copyLink()" class="copy-btn">העתק קישור</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/campaign/dashboard.js"></script>
+</body>
+</html>`;
