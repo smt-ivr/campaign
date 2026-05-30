@@ -8,10 +8,69 @@ let solicitorLoaded = false;
 
 let selectedCurrency = '1'; 
 let minAmountLimit = 0;
+let currentLang = 'he';
 
-const formatMoney = (num) => num.toLocaleString('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const formatMoney = (num) => num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const translations = {
+    he: {
+        raisedFrom: "מתוך",
+        solicitorsTitle: "מתרימי הקמפיין",
+        loadingData: "טוען נתונים...",
+        donateTitle: "השותפות שלך",
+        fname: "שם פרטי",
+        lname: "שם משפחה",
+        phone: "טלפון",
+        zeout: "תעודת זהות (לא חובה)",
+        email: "אימייל",
+        comment: "הערות",
+        selectSolicitor: "בחר מתרים",
+        loadingSolicitors: "טוען מתרימים...",
+        loadingIframe: "טוען סליקה מאובטחת...",
+        enterAmountBtn: "הזן סכום",
+        paySecure: "לתשלום מאובטח",
+        minAmount: "מינימום לתרומה:",
+        identifyingSol: "מזהה מתרים...",
+        processing: "מעבד...",
+        errTitle: "שגיאה",
+        errConfig: "חסרות הגדרות סליקה מהשרת (API Valid). נסה שוב מאוחר יותר או רענן את הדף.",
+        errPay: "שגיאה בתשלום",
+        successTitle: "תזכו למצוות!",
+        successMsg: "התרומה התקבלה בהצלחה.\\nאישור עסקה:",
+        solPrefix: "מתרים"
+    },
+    en: {
+        raisedFrom: "raised out of",
+        solicitorsTitle: "Campaign Solicitors",
+        loadingData: "Loading data...",
+        donateTitle: "Your Partnership",
+        fname: "First Name",
+        lname: "Last Name",
+        phone: "Phone",
+        zeout: "ID (Optional)",
+        email: "Email",
+        comment: "Comments",
+        selectSolicitor: "Select Solicitor",
+        loadingSolicitors: "Loading solicitors...",
+        loadingIframe: "Loading secure payment...",
+        enterAmountBtn: "Enter Amount",
+        paySecure: "Secure Payment",
+        minAmount: "Min Donation:",
+        identifyingSol: "Identifying solicitor...",
+        processing: "Processing...",
+        errTitle: "Error",
+        errConfig: "Missing payment configuration from server. Please try again later.",
+        errPay: "Payment Error",
+        successTitle: "Thank You!",
+        successMsg: "Donation received successfully.\\nTransaction ID:",
+        solPrefix: "Solicitor"
+    }
+};
+
+const t = (key) => translations[currentLang][key] || key;
 
 document.addEventListener('DOMContentLoaded', () => {
+    initLanguage();
     document.getElementById('custom-amount').focus();
     parseUrlParameters();
     fetchCampaignInfo();
@@ -19,6 +78,51 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchDonationConfig();
     setupEventListeners();
 });
+
+function initLanguage() {
+    const path = window.location.pathname;
+    
+    let detected = null;
+    if (path.includes('/en')) detected = 'en';
+    else if (path.includes('/he')) detected = 'he';
+    
+    if (detected) {
+        currentLang = detected;
+        localStorage.setItem('campaign_lang', currentLang);
+    } else {
+        const saved = localStorage.getItem('campaign_lang');
+        if (saved && translations[saved]) {
+            currentLang = saved;
+        } else if (navigator.language.startsWith('en')) {
+            currentLang = 'en';
+        }
+    }
+    
+    if (currentLang === 'en') {
+        document.documentElement.lang = 'en';
+        document.documentElement.dir = 'ltr';
+        selectedCurrency = '2'; // דולר כברירת מחדל לאנגלית
+        updateCurrencyVisuals('2');
+    }
+
+    applyTranslations();
+}
+
+function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[currentLang][key]) {
+            el.innerText = translations[currentLang][key];
+        }
+    });
+    
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[currentLang][key]) {
+            el.placeholder = translations[currentLang][key];
+        }
+    });
+}
 
 function parseUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -38,7 +142,7 @@ function parseUrlParameters() {
 
     if (isSolicitorRequired) {
         const sel = document.getElementById('solicitor-select');
-        sel.innerHTML = '<option value="">טוען את המתרים...</option>';
+        sel.innerHTML = \`<option value="">\${t('loadingSolicitors')}</option>\`;
     }
 
     const amountParam = urlParams.get('amount');
@@ -49,8 +153,8 @@ function parseUrlParameters() {
     }
 
     const currParam = urlParams.get('currency');
-    if (currParam === '2') {
-        updateCurrencyVisuals('2');
+    if (currParam) {
+        updateCurrencyVisuals(currParam);
     }
 
     const lockParam = urlParams.get('lock_amount');
@@ -61,11 +165,6 @@ function parseUrlParameters() {
     const minParam = urlParams.get('min_amount');
     if (minParam) {
         minAmountLimit = parseFloat(minParam);
-    }
-
-    if (window.history.replaceState && window.location.search) {
-        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        window.history.replaceState({path: cleanUrl}, '', cleanUrl);
     }
 }
 
@@ -91,8 +190,8 @@ async function fetchCampaignInfo() {
         
         if (result.status === 'success') {
             const data = result.data;
-            document.getElementById('campaign-title').innerText = data.campaign_name || 'הכנסת כלה';
-            document.getElementById('target-amount').innerText = \`₪\${data.target.toLocaleString('he-IL')}\`;
+            document.getElementById('campaign-title').innerText = data.campaign_name || 'Campaign';
+            document.getElementById('target-amount').innerText = \`₪\${data.target.toLocaleString('en-US')}\`;
             
             document.getElementById('total-raised').innerText = \`₪\${formatMoney(data.total_raised)}\`;
             
@@ -111,7 +210,7 @@ async function fetchCampaignInfo() {
                 if (text) text.textContent = \`\${percentage}%\`;
             }, 100);
         }
-    } catch (err) { console.error('שגיאה:', err); }
+    } catch (err) { console.error(err); }
 }
 
 async function fetchSolicitors() {
@@ -124,7 +223,7 @@ async function fetchSolicitors() {
             const selectEl = document.getElementById('solicitor-select');
             listEl.innerHTML = '';
             
-            if (!isSolicitorRequired) selectEl.innerHTML = '<option value="">בחר מתרים</option>';
+            if (!isSolicitorRequired) selectEl.innerHTML = \`<option value="">\${t('selectSolicitor')}</option>\`;
             else selectEl.innerHTML = ''; 
             
             result.data.sort((a, b) => b.raised - a.raised).forEach(sol => {
@@ -137,7 +236,7 @@ async function fetchSolicitors() {
                         <div class="sol-info">
                             <span class="sol-name">\${sol.name}</span>
                             <span class="sol-stats">
-                                <span class="sol-total">₪\${formatMoney(sol.raised)}</span> מתוך ₪\${target.toLocaleString('he-IL')}
+                                <span class="sol-total">₪\${formatMoney(sol.raised)}</span> \${t('raisedFrom')} ₪\${target.toLocaleString('en-US')}
                             </span>
                         </div>
                         <div class="sol-breakdown">
@@ -157,7 +256,7 @@ async function fetchSolicitors() {
 
             if (isSolicitorRequired) {
                 let found = result.data.find(s => s.id == lockedSolicitorId);
-                if (!found) selectEl.innerHTML += \`<option value="\${lockedSolicitorId}">מתרים \${lockedSolicitorId}</option>\`;
+                if (!found) selectEl.innerHTML += \`<option value="\${lockedSolicitorId}">\${t('solPrefix')} \${lockedSolicitorId}</option>\`;
                 
                 selectEl.value = lockedSolicitorId;
                 selectEl.disabled = true;
@@ -169,7 +268,6 @@ async function fetchSolicitors() {
             }
         }
     } catch (err) { 
-        console.error('שגיאה בטעינת מתרימים:', err); 
         solicitorLoaded = true; 
         document.getElementById('custom-amount').dispatchEvent(new Event('input'));
     }
@@ -186,7 +284,7 @@ async function fetchDonationConfig() {
             campaignConfig.category = result.data.category || '';
             initIframe();
         }
-    } catch (err) { console.error('שגיאה:', err); }
+    } catch (err) { console.error(err); }
 }
 
 function isValidIsraeliID(id) {
@@ -238,20 +336,20 @@ function setupEventListeners() {
         const symbol = selectedCurrency === '2' ? '$' : '₪';
         
         if (isSolicitorRequired && !solicitorLoaded) {
-             payBtn.innerText = 'מזהה מתרים...'; payBtn.disabled = true; return;
+             payBtn.innerText = t('identifyingSol'); payBtn.disabled = true; return;
         }
 
         if (amount > 0 && amount >= minAmountLimit) {
             currentDonationAmount = amount;
-            payBtn.innerText = \`לתשלום מאובטח \${symbol}\${amount.toLocaleString()}\`;
+            payBtn.innerText = \`\${t('paySecure')} \${symbol}\${amount.toLocaleString()}\`;
             payBtn.disabled = false;
         } else if (amount > 0 && amount < minAmountLimit) {
             currentDonationAmount = 0;
-            payBtn.innerText = \`מינימום לתרומה: \${symbol}\${minAmountLimit}\`;
+            payBtn.innerText = \`\${t('minAmount')} \${symbol}\${minAmountLimit}\`;
             payBtn.disabled = true;
         } else {
             currentDonationAmount = 0;
-            payBtn.innerText = 'הזן סכום';
+            payBtn.innerText = t('enterAmountBtn');
             payBtn.disabled = true;
         }
     });
@@ -261,7 +359,8 @@ function setupEventListeners() {
 
 function initIframe() {
     const iframe = document.getElementById('NedarimFrame');
-    iframe.src = "https://matara.pro/nedarimplus/iframe?language=he&v=" + Date.now();
+    const nedarimLang = currentLang === 'en' ? 'en' : 'he';
+    iframe.src = \`https://matara.pro/nedarimplus/iframe?language=${nedarimLang}&v=\${Date.now()}\`;
     iframe.onload = () => {
         if (iframe.src !== "about:blank") iframe.contentWindow.postMessage({'Name': 'GetHeight'}, "*");
     };
@@ -271,7 +370,7 @@ function processPayment() {
     if (currentDonationAmount <= 0) return;
     
     if (!campaignConfig.apiValid) {
-        showModal('שגיאה', 'חסרות הגדרות סליקה מהשרת (API Valid). נסה שוב מאוחר יותר או רענן את הדף.', 'error');
+        showModal(t('errTitle'), t('errConfig'), 'error');
         return;
     }
 
@@ -288,13 +387,13 @@ function processPayment() {
     const zeoutVal = zeoutEl.classList.contains('input-error') ? '' : zeoutEl.value.trim();
 
     const payBtn = document.getElementById('pay-btn');
-    payBtn.innerText = 'מעבד...';
+    payBtn.innerText = t('processing');
     payBtn.disabled = true;
 
     let rawComment = document.getElementById('comment').value || '';
     const solSelect = document.getElementById('solicitor-select');
     const solName = solSelect.options[solSelect.selectedIndex]?.text || '';
-    if (solSelect.value) rawComment += \` | מתרים: \${solName}\`;
+    if (solSelect.value) rawComment += \` | Solicitor: \${solName}\`;
 
     const iframe = document.getElementById('NedarimFrame');
     iframe.contentWindow.postMessage({
@@ -330,12 +429,12 @@ window.addEventListener('message', function(event) {
     if (event.data.Name === 'TransactionResponse') {
         const payBtn = document.getElementById('pay-btn');
         if (event.data.Value.Status === 'Error') {
-            showModal('שגיאה בתשלום', event.data.Value.Message, 'error');
+            showModal(t('errPay'), event.data.Value.Message, 'error');
             const symbol = selectedCurrency === '2' ? '$' : '₪';
-            payBtn.innerText = \`לתשלום מאובטח \${symbol}\${currentDonationAmount.toLocaleString()}\`;
+            payBtn.innerText = \`\${t('paySecure')} \${symbol}\${currentDonationAmount.toLocaleString()}\`;
             payBtn.disabled = false;
         } else {
-            showModal('תזכו למצוות!', \`התרומה התקבלה בהצלחה.\\nאישור עסקה: \${event.data.Value.TransactionId}\`, 'success');
+            showModal(t('successTitle'), \`\${t('successMsg')} \${event.data.Value.TransactionId}\`, 'success');
             resetForm();
             fetchCampaignInfo(); 
             fetchSolicitors();   
@@ -356,7 +455,7 @@ function resetForm() {
     
     currentDonationAmount = 0;
     const payBtn = document.getElementById('pay-btn');
-    payBtn.innerText = 'הזן סכום';
+    payBtn.innerText = t('enterAmountBtn');
     payBtn.disabled = true;
     
     document.getElementById('iframe-loader').style.display = 'flex';
