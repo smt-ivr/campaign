@@ -137,9 +137,10 @@ function parseUrlParameters() {
     if (idParam) {
         lockedSolicitorId = parseInt(idParam);
         isSolicitorRequired = true;
-        sessionStorage.setItem('savedSolicitorId', lockedSolicitorId); 
+        // מעכשיו שומרים ב-localStorage כדי שיישאר קבוע גם בסגירת הדפדפן
+        localStorage.setItem('savedSolicitorId', lockedSolicitorId); 
     } else {
-        const savedId = sessionStorage.getItem('savedSolicitorId');
+        const savedId = localStorage.getItem('savedSolicitorId');
         if (savedId) {
             lockedSolicitorId = parseInt(savedId);
             isSolicitorRequired = true;
@@ -303,11 +304,9 @@ function validateField(inputEl, type) {
         isValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(val);
     } 
     else if (type === 'phone') {
-        // מאשר כל טקסט או מספר באורך 5 תווים לפחות (טלפונים, קידומות, מקפים וכו')
         isValid = val.length >= 5; 
     } 
     else if (type === 'zeout') {
-        // מאשר רק מספרים (ללא הגבלת אורך או ספרת ביקורת)
         isValid = /^[0-9]+$/.test(val); 
     }
 
