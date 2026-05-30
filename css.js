@@ -74,7 +74,6 @@ body {
 .animate-fade-in { animation: fadeInBreakdown 0.8s ease-out forwards; opacity: 0; }
 @keyframes fadeInBreakdown { 0% { opacity: 0; transform: translateY(-5px); } 100% { opacity: 1; transform: translateY(0); } }
 
-/* אזור המתרימים - הוגדר כמיקום יחסי כדי להכיל את הרשימה האבסולוטית */
 .mini-leaderboard { 
     display: flex; 
     flex-direction: column; 
@@ -86,15 +85,14 @@ body {
     font-size: 1.05rem; 
     border-bottom: 1px solid rgba(255,255,255,0.2); 
     padding-bottom: 8px; 
-    margin: 0; /* איפוס שוליים */
+    margin: 0; 
     text-align: center; 
-    height: 32px; /* גובה קבוע לכותרת */
+    height: 32px; 
 }
 
-/* רשימת המתרימים - הוצאה לחלוטין מחישובי הגובה של הדפדפן */
 .scroll-list { 
     position: absolute; 
-    top: 40px; /* מתחיל בדיוק מתחת לכותרת */
+    top: 40px; 
     bottom: 0; 
     left: 0; 
     right: 0; 
@@ -128,24 +126,80 @@ body {
 }
 .donate-panel h2 { margin: 0 0 10px 0; font-size: 1.3rem; color: var(--dark-blue); font-weight: 800; }
 
-.amount-wrapper { display: flex; gap: 15px; margin-bottom: 12px; align-items: stretch; }
-.currency-toggle { display: flex; background: #e2e8f0; border-radius: 8px; overflow: hidden; border: 2px solid var(--border); transition: 0.3s; }
-.curr-btn {
-    flex: 1; padding: 0 18px; font-size: 1.5rem; font-weight: 800; cursor: pointer;
-    border: none; background: transparent; color: var(--text-light); transition: 0.3s;
+/* ======== עיצוב סכום ומטבע יוקרתי ======== */
+.unified-amount-wrapper {
+    display: flex;
+    align-items: center;
+    background: #fffdf5;
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 5px;
+    margin-bottom: 15px;
+    box-shadow: inset 0 2px 6px rgba(212,175,55,0.1);
+    transition: all 0.3s ease;
 }
-.curr-btn.active { background: var(--dark-blue); color: var(--gold); }
+.unified-amount-wrapper:focus-within {
+    background: #ffffff;
+    border-color: var(--dark-blue);
+    box-shadow: 0 0 0 4px rgba(26, 54, 93, 0.1);
+}
 
-.input-symbol-wrapper { flex-grow: 1; position: relative; display: flex; align-items: center; }
-.floating-symbol { position: absolute; right: 15px; font-size: 1.6rem; font-weight: 800; color: var(--gold); pointer-events: none; }
-.hero-amount-input {
-    width: 100%; padding: 12px 40px 12px 12px;
-    font-size: 1.6rem; font-weight: 800; color: var(--dark-blue);
-    border: 2px solid var(--gold); border-radius: 8px; text-align: center;
-    background: #fffdf5; outline: none; transition: 0.2s; box-shadow: inset 0 2px 4px rgba(212,175,55,0.1);
+.currency-toggle-inline {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
-.hero-amount-input:focus { background: #ffffff; box-shadow: 0 0 12px rgba(212,175,55,0.3); border-color: var(--dark-blue); }
-.hero-amount-input:disabled { background: #e2e8f0; border-color: #cbd5e0; color: #718096; cursor: not-allowed; }
+.curr-btn {
+    padding: 8px 20px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.curr-btn:hover:not(.active) { color: var(--dark-blue); }
+.curr-btn.active {
+    background: var(--dark-blue);
+    color: var(--gold);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.hero-amount-input {
+    flex-grow: 1;
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--dark-blue);
+    border: none;
+    background: transparent;
+    text-align: center;
+    outline: none;
+}
+.hero-amount-input::placeholder {
+    color: #cbd5e0;
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+.hero-amount-input:disabled {
+    color: #a0aec0;
+    cursor: not-allowed;
+}
+
+/* הסתרת החצים של תיבת מספר */
+.hero-amount-input::-webkit-outer-spin-button,
+.hero-amount-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.hero-amount-input[type=number] {
+    -moz-appearance: textfield;
+}
 
 .compact-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
 .input-group { display: contents; } 
@@ -228,19 +282,12 @@ body {
     transition: 0.3s;
     cursor: pointer;
 }
-.personal-area-btn:hover {
-    background: var(--gold);
-    transform: scale(1.05);
-}
+.personal-area-btn:hover { background: var(--gold); transform: scale(1.05); }
 
 [dir="ltr"] .solicitor-item { text-align: left; }
 [dir="ltr"] .sol-percent { text-align: right; }
-[dir="ltr"] .floating-symbol { right: auto; left: 15px; }
-[dir="ltr"] .hero-amount-input { padding: 12px 12px 12px 40px; }
-[dir="ltr"] .scroll-list { padding-right: 0; padding-left: 5px; }
 [dir="ltr"] .personal-area-btn { right: auto !important; left: 20px !important; }
 
-/* התאמה לנייד */
 @media (max-width: 900px) {
     body { overflow: auto; padding: 10px; height: auto; }
     .main-card { flex-direction: column; max-height: none; height: auto; display: flex; margin-top: 50px; }
@@ -252,11 +299,9 @@ body {
     .currency-badge { padding: 4px 10px; font-size: 0.9rem; }
     .donate-panel { width: 100%; order: 3; padding: 25px 20px; background: var(--card-bg); }
     
-    /* בנייד מחזירים את האזור להיות חלק רגיל מהדף כדי שלא יעלה על דברים אחרים */
     .mini-leaderboard { display: flex !important; width: 100%; order: 4; background: var(--dark-blue); color: white; padding: 25px 20px; position: static; }
     .mini-leaderboard h3 { color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.2); margin-top: 0; margin-bottom: 10px; height: auto; }
     
-    /* מחזירים את הרשימה לזרימה רגילה עם הגבלת גובה */
     .scroll-list { position: static; max-height: 250px; } 
     
     .solicitor-item { border-bottom: 1px solid rgba(255,255,255,0.1); }
