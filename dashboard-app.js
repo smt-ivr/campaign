@@ -2,6 +2,15 @@ export const dashboardJs = `const API_BASE_URL = "https://smti.uk/campaign/api";
 let currentSolicitorId = localStorage.getItem("dash_solicitor_id");
 let currentSolicitorPass = localStorage.getItem("dash_solicitor_pass");
 
+// חשיפת הפונקציות ל-window כדי שה-HTML יוכל לקרוא להן ישירות
+window.switchAuth = switchAuth;
+window.doLogin = doLogin;
+window.doRegister = doRegister;
+window.doLogout = doLogout;
+window.updateTarget = updateTarget;
+window.copyLink = copyLink;
+window.generateLink = generateLink;
+
 document.addEventListener("DOMContentLoaded", () => {
     if (currentSolicitorId && currentSolicitorPass) {
         showDashboard();
@@ -155,12 +164,37 @@ async function loadDashboardData() {
                 }
             }
 
-            const baseUrl = window.location.protocol + "//" + window.location.host + "/campaign";
-            document.getElementById("personal-link").value = baseUrl + "?id=" + currentSolicitorId;
+            // יצירת הקישור הראשוני
+            generateLink();
+            
         } else {
             doLogout();
         }
     } catch (e) { console.error("שגיאה בטעינת נתונים"); }
+}
+
+function generateLink() {
+    if (!currentSolicitorId) return;
+    
+    const baseUrl = window.location.protocol + "//" + window.location.host + "/campaign";
+    const lang = document.getElementById("link-lang").value;
+    
+    // בסיס הקישור
+    let link = lang === "en" ? baseUrl + "/en?id=" + currentSolicitorId : baseUrl + "?id=" + currentSolicitorId;
+    
+    // הוספת מטבע אם נבחר
+    const currency = document.getElementById("link-currency").value;
+    if (currency) link += "&currency=" + currency;
+    
+    // הוספת סכום קבוע אם הוקלד
+    const amount = document.getElementById("link-amount").value;
+    if (amount && amount > 0) link += "&amount=" + amount;
+    
+    // הוספת נעילת סכום
+    const isLocked = document.getElementById("link-lock").checked;
+    if (isLocked && amount) link += "&lock_amount=1";
+    
+    document.getElementById("personal-link").value = link;
 }
 
 async function updateTarget() {
@@ -205,4 +239,5 @@ function copyLink() {
         btn.innerText = originalText;
         btn.style.background = "#3182ce";
     }, 2000);
-}`;
+}
+`;
