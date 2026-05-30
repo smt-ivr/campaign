@@ -60,11 +60,11 @@ export const htmlContent = `<!DOCTYPE html>
                 <h2 data-i18n="donateTitle">השותפות שלך</h2>
                 
                 <div class="unified-amount-wrapper">
+                    <input type="number" id="custom-amount" data-i18n-placeholder="enterAmount" placeholder="סכום לתרומה" class="hero-amount-input" autofocus>
                     <div class="currency-toggle-inline" id="currency-toggle">
                         <button type="button" class="curr-btn active" data-val="1">₪</button>
                         <button type="button" class="curr-btn" data-val="2">$</button>
                     </div>
-                    <input type="number" id="custom-amount" data-i18n-placeholder="enterAmount" placeholder="סכום לתרומה" class="hero-amount-input" autofocus>
                 </div>
 
                 <div class="compact-form">
