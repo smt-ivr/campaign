@@ -126,69 +126,47 @@ body {
 }
 .donate-panel h2 { margin: 0 0 10px 0; font-size: 1.3rem; color: var(--dark-blue); font-weight: 800; }
 
-/* ======== עיצוב סכום ומטבע יוקרתי ======== */
+/* ======== עיצוב סכום ומטבע סופר-פרימיום ======== */
 .unified-amount-wrapper {
     display: flex;
     align-items: center;
-    background: #fffdf5;
-    border: 2px solid var(--gold);
-    border-radius: 12px;
-    padding: 5px;
-    margin-bottom: 15px;
-    box-shadow: inset 0 2px 6px rgba(212,175,55,0.1);
-    transition: all 0.3s ease;
-}
-.unified-amount-wrapper:focus-within {
+    justify-content: space-between;
     background: #ffffff;
-    border-color: var(--dark-blue);
-    box-shadow: 0 0 0 4px rgba(26, 54, 93, 0.1);
+    border: 2px solid #e2e8f0; /* גבול עדין ויוקרתי */
+    border-radius: 16px;
+    padding: 8px 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03); /* צללית רכה מאוד */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
 
-.currency-toggle-inline {
-    display: flex;
-    background: #f1f5f9;
-    border-radius: 8px;
-    padding: 4px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-}
-.curr-btn {
-    padding: 8px 20px;
-    font-size: 1.4rem;
-    font-weight: 800;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    color: #64748b;
-    border-radius: 6px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.curr-btn:hover:not(.active) { color: var(--dark-blue); }
-.curr-btn.active {
-    background: var(--dark-blue);
-    color: var(--gold);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+.unified-amount-wrapper:focus-within {
+    border-color: var(--dark-blue);
+    box-shadow: 0 0 0 4px rgba(26, 54, 93, 0.1), 0 4px 15px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px); /* אפקט ריחוף קל בעת הקלדה */
 }
 
 .hero-amount-input {
     flex-grow: 1;
     width: 100%;
     padding: 10px 15px;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 800;
     color: var(--dark-blue);
     border: none;
     background: transparent;
     text-align: center;
     outline: none;
+    font-family: inherit;
+    letter-spacing: 1px;
 }
+
 .hero-amount-input::placeholder {
     color: #cbd5e0;
     font-weight: 600;
-    font-size: 1.3rem;
-}
-.hero-amount-input:disabled {
-    color: #a0aec0;
-    cursor: not-allowed;
+    font-size: 1.4rem;
+    letter-spacing: normal;
 }
 
 /* הסתרת החצים של תיבת מספר */
@@ -200,6 +178,45 @@ body {
 .hero-amount-input[type=number] {
     -moz-appearance: textfield;
 }
+
+/* מתג מטבע בסגנון Segmented Control (כמו ב-iOS) */
+.currency-toggle-inline {
+    display: flex;
+    background: #f1f5f9; /* רקע אפרפר עדין */
+    border-radius: 12px;
+    padding: 4px;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.curr-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+    height: 42px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: #94a3b8; /* צבע אפור כהה למצב כבוי */
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    font-family: inherit;
+}
+
+.curr-btn:hover:not(.active) {
+    color: var(--dark-blue);
+    background: rgba(226, 232, 240, 0.5);
+}
+
+.curr-btn.active {
+    background: #ffffff; /* פיל לבן (Pill) */
+    color: var(--dark-blue);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.05); /* צללית תלת מימדית קטנה */
+}
+/* ================================================= */
 
 .compact-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
 .input-group { display: contents; } 
@@ -287,6 +304,9 @@ body {
 [dir="ltr"] .solicitor-item { text-align: left; }
 [dir="ltr"] .sol-percent { text-align: right; }
 [dir="ltr"] .personal-area-btn { right: auto !important; left: 20px !important; }
+
+/* הפיכת הסדר באנגלית (כדי שסימן הדולר יישאר נכון חזותית) */
+[dir="ltr"] .unified-amount-wrapper { flex-direction: row-reverse; }
 
 @media (max-width: 900px) {
     body { overflow: auto; padding: 10px; height: auto; }
