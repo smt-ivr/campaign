@@ -295,3 +295,85 @@ function processPayment() {
     const solSelect = document.getElementById('solicitor-select');
     const solName = solSelect.options[solSelect.selectedIndex]?.text || '';
     if (solSelect.value) rawComment += \` | מתרים: \${solName}\`;
+
+    const iframe = document.getElementById('NedarimFrame');
+    iframe.contentWindow.postMessage({
+        'Name': 'FinishTransaction2',
+        'Value': {
+            'Mosad': campaignConfig.mosadId,
+            'ApiValid': campaignConfig.apiValid,
+            'Amount': currentDonationAmount,
+            'FirstName': document.getElementById('fname').value,
+            'LastName': document.getElementById('lname').value,
+            'Mail': emailVal,
+            'Phone': phoneVal,
+            'Zeout': zeoutVal,
+            'Groupe': campaignConfig.groupe,
+            'Category': campaignConfig.category,
+            'Comment': rawComment,
+            'Param1': solSelect.value, 
+            'PaymentType': 'Ragil',
+            'Currency': selectedCurrency, 
+            'CallBack': \`\${API_BASE_URL}/webhook\`
+        }
+    }, "*");
+}
+
+window.addEventListener('message', function(event) {
+    if (!event.origin.includes("matara.pro") && !event.origin.includes("nedarimplus")) return;
+    if (!event.data || !event.data.Name) return;
+
+    if (event.data.Name === 'Height') {
+        document.getElementById('iframe-loader').style.display = 'none';
+    }
+    
+    if (event.data.Name === 'TransactionResponse') {
+        const payBtn = document.getElementById('pay-btn');
+        if (event.data.Value.Status === 'Error') {
+            showModal('שגיאה בתשלום', event.data.Value.Message, 'error');
+            const symbol = selectedCurrency === '2' ? '$' : '₪';
+            payBtn.innerText = \`לתשלום מאובטח \${symbol}\${currentDonationAmount.toLocaleString()}\`;
+            payBtn.disabled = false;
+        } else {
+            showModal('תזכו למצוות!', \`התרומה התקבלה בהצלחה.\\nאישור עסקה: \${event.data.Value.TransactionId}\`, 'success');
+            resetForm();
+            fetchCampaignInfo(); 
+            fetchSolicitors();   
+        }
+    }
+});
+
+function resetForm() {
+    document.getElementById('custom-amount').value = '';
+    document.getElementById('fname').value = '';
+    document.getElementById('lname').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('phone').value = '';
+    document.getElementById('zeout').value = '';
+    document.getElementById('comment').value = '';
+    
+    ['email', 'phone', 'zeout'].forEach(id => document.getElementById(id).classList.remove('input-error'));
+    
+    currentDonationAmount = 0;
+    const payBtn = document.getElementById('pay-btn');
+    payBtn.innerText = 'הזן סכום';
+    payBtn.disabled = true;
+    
+    document.getElementById('iframe-loader').style.display = 'flex';
+    initIframe();
+    document.getElementById('custom-amount').focus();
+}
+
+function showModal(title, text, type) {
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-text').innerText = text;
+    document.getElementById('modal-icon').className = \`sa-icon sa-\${type}\`;
+    document.getElementById('modal-overlay').classList.add('show');
+    document.getElementById('custom-modal').classList.add('show');
+}
+
+function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('show');
+    document.getElementById('custom-modal').classList.remove('show');
+}
+`;
