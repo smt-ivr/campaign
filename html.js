@@ -26,83 +26,88 @@ export const htmlContent = `<!DOCTYPE html>
             </div>
         </div>
 
-        <main class="main-card">
-            
-            <section class="info-panel">
-                <div class="info-content">
-                    <h1 id="campaign-title" data-i18n="loadingTitle">טוען...</h1>
-                    
-                    <div class="elegant-stats">
-                        <div class="stat-circle">
-                            <svg viewBox="0 0 36 36" class="circular-chart">
-                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <path class="circle" id="progress-circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <text x="18" y="20.35" class="percentage" id="progress-text">0%</text>
-                            </svg>
-                        </div>
-                        <div class="stat-text">
-                            <div class="raised" id="total-raised">₪0</div>
-                            
-                            <div class="currency-breakdown animate-fade-in">
-                                <div class="currency-badge ils-badge" title="סך הכל בשקלים">
-                                    <span id="total-ils-badge">₪0</span>
-                                </div>
-                                <div class="currency-badge usd-badge" title="סך הכל בדולרים">
-                                    <span id="total-usd-badge">$0</span>
-                                </div>
+        <div class="content-layout">
+            <aside class="side-content">
+                <div class="recommendation-box" onclick="showImage('https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png')" title="לחץ להגדלה">
+                    <h4 class="rec-title" data-i18n="recommendationTitle">המלצה</h4>
+                    <img src="https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png" alt="המלצה" class="rec-img" draggable="false" oncontextmenu="return false;">
+                </div>
+            </aside>
+
+            <main class="main-card">
+                
+                <section class="info-panel">
+                    <div class="info-content">
+                        <h1 id="campaign-title" data-i18n="loadingTitle">טוען...</h1>
+                        
+                        <div class="elegant-stats">
+                            <div class="stat-circle">
+                                <svg viewBox="0 0 36 36" class="circular-chart">
+                                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path class="circle" id="progress-circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <text x="18" y="20.35" class="percentage" id="progress-text">0%</text>
+                                </svg>
                             </div>
-                            
-                            <div class="target"><span data-i18n="raisedFrom">מתוך</span> <span id="target-amount">₪0</span></div>
+                            <div class="stat-text">
+                                <div class="raised" id="total-raised">₪0</div>
+                                
+                                <div class="currency-breakdown animate-fade-in">
+                                    <div class="currency-badge ils-badge" title="סך הכל בשקלים">
+                                        <span id="total-ils-badge">₪0</span>
+                                    </div>
+                                    <div class="currency-badge usd-badge" title="סך הכל בדולרים">
+                                        <span id="total-usd-badge">$0</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="target"><span data-i18n="raisedFrom">מתוך</span> <span id="target-amount">₪0</span></div>
+                            </div>
+                        </div>
+
+                        <div class="mini-leaderboard">
+                            <h3 data-i18n="solicitorsTitle">מתרימי הקמפיין</h3>
+                            <div class="scroll-list" id="solicitors-list">
+                                <div style="opacity: 0.5; font-size: 0.9rem; text-align: center;" data-i18n="loadingData">טוען נתונים...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="donate-panel">
+                    <h2 data-i18n="donateTitle">השותפות שלך</h2>
+                    
+                    <div class="unified-amount-wrapper">
+                        <input type="number" id="custom-amount" data-i18n-placeholder="enterAmount" placeholder="סכום לתרומה" class="hero-amount-input" autofocus>
+                        <div class="currency-toggle-inline" id="currency-toggle">
+                            <button type="button" class="curr-btn active" data-val="1">₪</button>
+                            <button type="button" class="curr-btn" data-val="2">$</button>
                         </div>
                     </div>
 
-                    <div class="recommendation-wrapper" onclick="showImage('https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png')" title="לחץ להגדלה">
-                        <img src="https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png" alt="המלצה" class="recommendation-img">
-                    </div>
-
-                    <div class="mini-leaderboard">
-                        <h3 data-i18n="solicitorsTitle">מתרימי הקמפיין</h3>
-                        <div class="scroll-list" id="solicitors-list">
-                            <div style="opacity: 0.5; font-size: 0.9rem; text-align: center;" data-i18n="loadingData">טוען נתונים...</div>
+                    <div class="compact-form">
+                        <div class="input-group">
+                            <input type="text" id="fname" data-i18n-placeholder="fname" placeholder="שם פרטי">
+                            <input type="text" id="lname" data-i18n-placeholder="lname" placeholder="שם משפחה">
+                            <input type="tel" id="phone" data-i18n-placeholder="phone" placeholder="טלפון">
+                            <input type="text" id="zeout" data-i18n-placeholder="zeout" placeholder="תעודת זהות (לא חובה)" maxlength="9">
+                            <input type="email" id="email" data-i18n-placeholder="email" placeholder="אימייל">
+                            <select id="solicitor-select">
+                                <option value="" data-i18n="loadingSolicitors">טוען מתרימים...</option>
+                            </select>
                         </div>
+                        <input type="text" id="comment" data-i18n-placeholder="comment" placeholder="הערות">
                     </div>
-                </div>
-            </section>
 
-            <section class="donate-panel">
-                <h2 data-i18n="donateTitle">השותפות שלך</h2>
-                
-                <div class="unified-amount-wrapper">
-                    <input type="number" id="custom-amount" data-i18n-placeholder="enterAmount" placeholder="סכום לתרומה" class="hero-amount-input" autofocus>
-                    <div class="currency-toggle-inline" id="currency-toggle">
-                        <button type="button" class="curr-btn active" data-val="1">₪</button>
-                        <button type="button" class="curr-btn" data-val="2">$</button>
+                    <div class="payment-area">
+                        <div id="iframe-loader" class="loader-overlay" data-i18n="loadingIframe">טוען סליקה מאובטחת...</div>
+                        <iframe id="NedarimFrame" src="about:blank" scrolling="no"></iframe>
                     </div>
-                </div>
+                    
+                    <button id="pay-btn" class="elegant-submit" disabled data-i18n="enterAmountBtn">הזן סכום</button>
+                </section>
 
-                <div class="compact-form">
-                    <div class="input-group">
-                        <input type="text" id="fname" data-i18n-placeholder="fname" placeholder="שם פרטי">
-                        <input type="text" id="lname" data-i18n-placeholder="lname" placeholder="שם משפחה">
-                        <input type="tel" id="phone" data-i18n-placeholder="phone" placeholder="טלפון">
-                        <input type="text" id="zeout" data-i18n-placeholder="zeout" placeholder="תעודת זהות (לא חובה)" maxlength="9">
-                        <input type="email" id="email" data-i18n-placeholder="email" placeholder="אימייל">
-                        <select id="solicitor-select">
-                            <option value="" data-i18n="loadingSolicitors">טוען מתרימים...</option>
-                        </select>
-                    </div>
-                    <input type="text" id="comment" data-i18n-placeholder="comment" placeholder="הערות">
-                </div>
-
-                <div class="payment-area">
-                    <div id="iframe-loader" class="loader-overlay" data-i18n="loadingIframe">טוען סליקה מאובטחת...</div>
-                    <iframe id="NedarimFrame" src="about:blank" scrolling="no"></iframe>
-                </div>
-                
-                <button id="pay-btn" class="elegant-submit" disabled data-i18n="enterAmountBtn">הזן סכום</button>
-            </section>
-
-        </main>
+            </main>
+        </div>
     </div>
 
     <div class="sweet-overlay" id="modal-overlay"></div>
