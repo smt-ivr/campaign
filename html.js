@@ -36,21 +36,21 @@ export const htmlContent = `<!DOCTYPE html>
                                 </div>
                             </div>
                             
-                            <div class="target">מתוך <span id="target-amount">₪0</span></div>
+                            <div class="target"><span data-i18n="raisedFrom">מתוך</span> <span id="target-amount">₪0</span></div>
                         </div>
                     </div>
 
                     <div class="mini-leaderboard">
-                        <h3>מתרימי הקמפיין</h3>
+                        <h3 data-i18n="solicitorsTitle">מתרימי הקמפיין</h3>
                         <div class="scroll-list" id="solicitors-list">
-                            <div style="opacity: 0.5; font-size: 0.9rem; text-align: center;">טוען נתונים...</div>
+                            <div style="opacity: 0.5; font-size: 0.9rem; text-align: center;" data-i18n="loadingData">טוען נתונים...</div>
                         </div>
                     </div>
                 </div>
             </section>
 
             <section class="donate-panel">
-                <h2>השותפות שלך</h2>
+                <h2 data-i18n="donateTitle">השותפות שלך</h2>
                 
                 <div class="amount-wrapper">
                     <div class="currency-toggle">
@@ -59,30 +59,30 @@ export const htmlContent = `<!DOCTYPE html>
                     </div>
                     <div class="input-symbol-wrapper">
                         <span class="floating-symbol">₪</span>
-                        <input type="number" id="custom-amount" placeholder="סכום לתרומה" class="hero-amount-input" autofocus>
+                        <input type="number" id="custom-amount" data-i18n-placeholder="enterAmount" placeholder="סכום לתרומה" class="hero-amount-input" autofocus>
                     </div>
                 </div>
 
                 <div class="compact-form">
                     <div class="input-group">
-                        <input type="text" id="fname" placeholder="שם פרטי">
-                        <input type="text" id="lname" placeholder="שם משפחה">
-                        <input type="tel" id="phone" placeholder="טלפון">
-                        <input type="text" id="zeout" placeholder="תעודת זהות (לא חובה)" maxlength="9">
-                        <input type="email" id="email" placeholder="אימייל">
+                        <input type="text" id="fname" data-i18n-placeholder="fname" placeholder="שם פרטי">
+                        <input type="text" id="lname" data-i18n-placeholder="lname" placeholder="שם משפחה">
+                        <input type="tel" id="phone" data-i18n-placeholder="phone" placeholder="טלפון">
+                        <input type="text" id="zeout" data-i18n-placeholder="zeout" placeholder="תעודת זהות (לא חובה)" maxlength="9">
+                        <input type="email" id="email" data-i18n-placeholder="email" placeholder="אימייל">
                         <select id="solicitor-select">
-                            <option value="">טוען מתרימים...</option>
+                            <option value="" data-i18n="loadingSolicitors">טוען מתרימים...</option>
                         </select>
                     </div>
-                    <input type="text" id="comment" placeholder="הערות">
+                    <input type="text" id="comment" data-i18n-placeholder="comment" placeholder="הערות">
                 </div>
 
                 <div class="payment-area">
-                    <div id="iframe-loader" class="loader-overlay">טוען סליקה מאובטחת...</div>
+                    <div id="iframe-loader" class="loader-overlay" data-i18n="loadingIframe">טוען סליקה מאובטחת...</div>
                     <iframe id="NedarimFrame" src="about:blank" scrolling="no"></iframe>
                 </div>
                 
-                <button id="pay-btn" class="elegant-submit" disabled>הזן סכום</button>
+                <button id="pay-btn" class="elegant-submit" disabled data-i18n="enterAmountBtn">הזן סכום</button>
             </section>
 
         </main>
@@ -93,7 +93,7 @@ export const htmlContent = `<!DOCTYPE html>
         <div class="sa-icon" id="modal-icon"></div>
         <h3 id="modal-title"></h3>
         <p id="modal-text"></p>
-        <button class="modal-btn" onclick="closeModal()">אישור</button>
+        <button class="modal-btn" onclick="closeModal()">OK</button>
     </div>
 
     <script src="/campaign/app.js"></script>
