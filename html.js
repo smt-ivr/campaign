@@ -3,7 +3,7 @@ export const htmlContent = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>קמפיין</title>
+    <title>קמפיין הכנסת כלה</title>
     <link rel="stylesheet" href="/campaign/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
