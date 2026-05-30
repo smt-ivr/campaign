@@ -15,30 +15,31 @@ body {
     margin: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* שונה מ-center כדי לאפשר גלילה נוחה בנייד */
     min-height: 100vh;
-    padding: 30px 15px;
+    padding: 70px 15px 30px 15px; /* הוסף מרווח עליון לכפתור החזרה */
 }
 
 * { box-sizing: border-box; }
 
 .back-btn {
     position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
+    top: 15px !important;
+    right: 15px !important;
     background: white;
     color: var(--dark-blue);
     padding: 8px 16px;
     border-radius: 20px;
     text-decoration: none;
     font-weight: 600;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     transition: 0.2s;
     z-index: 99999 !important;
+    font-size: 0.95rem;
 }
 .back-btn:hover { background: var(--dark-blue); color: white; }
 
-.dashboard-wrapper { width: 100%; max-width: 950px; margin-top: 20px; }
+.dashboard-wrapper { width: 100%; max-width: 950px; margin-top: 0; }
 
 .dash-card {
     background: var(--card-bg);
@@ -47,7 +48,7 @@ body {
     box-shadow: 0 15px 35px rgba(0,0,0,0.08);
 }
 
-.auth-card { max-width: 450px; margin: 0 auto; }
+.auth-card { max-width: 450px; margin: 20px auto; }
 .wide-card { max-width: 100%; }
 
 .auth-form h2 { margin-top: 0; color: var(--dark-blue); text-align: center; margin-bottom: 25px; font-size: 1.6rem; }
@@ -74,16 +75,11 @@ body {
 .success-msg { color: #38a169; font-size: 0.95rem; text-align: center; min-height: 20px; margin: 10px 0 0 0; font-weight: bold; }
 
 .user-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 20px; margin-bottom: 25px; }
-.user-header h2 { margin: 0; color: var(--dark-blue); font-size: 1.8rem; }
-.logout-btn { background: #fee2e2; color: #dc2626; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 1rem; transition: 0.2s; }
+.user-header h2 { margin: 0; color: var(--dark-blue); font-size: 1.8rem; line-height: 1.2; }
+.logout-btn { background: #fee2e2; color: #dc2626; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 1rem; transition: 0.2s; flex-shrink: 0; }
 .logout-btn:hover { background: #fca5a5; }
 
 .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-
-@media (max-width: 768px) {
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .form-grid { grid-template-columns: 1fr; }
-}
 
 .main-stats-panel { display: flex; flex-direction: column; gap: 25px; }
 
@@ -92,7 +88,7 @@ body {
 .stat-box span { display: block; color: #718096; font-size: 1rem; margin-bottom: 8px; font-weight: 600; }
 .stat-box strong { display: block; color: var(--dark-blue); font-size: 1.8rem; font-weight: 800; }
 
-.currency-breakdown { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
+.currency-breakdown { display: flex; justify-content: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
 .badge { padding: 4px 10px; border-radius: 15px; font-size: 0.85rem; font-weight: bold; }
 .badge-ils { background: #e2e8f0; color: #2d3748; }
 .badge-usd { background: #c6f6d5; color: #22543d; }
@@ -106,15 +102,14 @@ body {
 .update-target-box { background: #fffdf5; padding: 20px; border-radius: 12px; border: 1px solid var(--gold); }
 .update-target-box h3 { margin: 0 0 15px 0; font-size: 1.2rem; color: var(--dark-blue); }
 .target-input-row { display: flex; gap: 10px; }
-.target-input-row input { flex: 1; padding: 12px; border: 1px solid #d4af37; border-radius: 8px; font-family: inherit; font-size: 1.05rem; }
-.update-btn { padding: 12px 20px; background: var(--gold); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 1rem; transition: 0.2s; }
+.target-input-row input { flex: 1; padding: 12px; border: 1px solid #d4af37; border-radius: 8px; font-family: inherit; font-size: 1.05rem; width: 100%; }
+.update-btn { padding: 12px 20px; background: var(--gold); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 1rem; transition: 0.2s; white-space: nowrap; }
 .update-btn:hover { background: #b8962e; }
 
 .link-box { background: #ebf8ff; padding: 20px; border-radius: 12px; border: 1px solid #90cdf4; text-align: center; }
 .link-box h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: #2b6cb0; }
 .link-box p { font-size: 0.95rem; color: #4a5568; margin-top: 0; margin-bottom: 15px; }
 
-/* מחולל הקישורים - עיצוב חדש */
 .link-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; text-align: right; }
 .link-options select, .link-options input[type="number"] { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-family: inherit; font-size: 0.95rem; background: white; outline: none; }
 .link-options select:focus, .link-options input:focus { border-color: #3182ce; }
@@ -140,8 +135,49 @@ body {
 .d-footer { display: flex; flex-direction: column; font-size: 0.85rem; color: #718096; gap: 4px; }
 .d-comment { font-style: italic; color: #4a5568; background: #edf2f7; padding: 6px 10px; border-radius: 6px; margin-top: 4px; display: inline-block; }
 
-@media (max-width: 480px) {
-    .link-options { grid-template-columns: 1fr; }
+/* ====================================================
+   התאמות רספונסיביות מעמיקות למובייל (טאבלטים וטלפונים)
+   ==================================================== */
+
+@media (max-width: 900px) {
+    .dashboard-grid { grid-template-columns: 1fr; gap: 20px; }
+    .dash-card { padding: 25px 20px; }
+}
+
+@media (max-width: 600px) {
+    body { padding: 65px 10px 20px 10px; }
+    .form-grid { grid-template-columns: 1fr; } /* טופס הרשמה הופך לטור אחד */
+    
+    .stats-grid { grid-template-columns: 1fr; } /* קופסאות נתונים אחת מתחת לשנייה */
+    
+    .user-header { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 15px; 
+    }
+    .user-header h2 { font-size: 1.5rem; }
+    .logout-btn { 
+        width: 100%; 
+        padding: 10px; 
+    }
+    
+    .target-input-row { 
+        flex-direction: column; /* שדה הסכום והכפתור אחד מתחת לשני */
+    }
+    .update-btn { 
+        width: 100%; 
+    }
+
+    .link-options { grid-template-columns: 1fr; } /* מחולל הלינקים טור אחד */
     .lock-label { grid-column: span 1; }
+
+    .donations-history { padding: 15px; }
+    
+    /* מונע מהסכומים והשמות לדרוס אחד את השני במסך ממש צר */
+    .d-header { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 5px; 
+    }
 }
 `;
