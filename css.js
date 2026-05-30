@@ -126,32 +126,32 @@ body {
 }
 .donate-panel h2 { margin: 0 0 10px 0; font-size: 1.3rem; color: var(--dark-blue); font-weight: 800; }
 
-/* ======== עיצוב סכום ומטבע סופר-פרימיום ======== */
+/* ======== עיצוב סכום ומטבע יוקרתי וקומפקטי ======== */
 .unified-amount-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: #ffffff;
-    border: 2px solid #e2e8f0; /* גבול עדין ויוקרתי */
-    border-radius: 16px;
-    padding: 8px 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03); /* צללית רכה מאוד */
+    border: 2px solid #e2e8f0; 
+    border-radius: 12px;
+    padding: 6px 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); 
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
 .unified-amount-wrapper:focus-within {
     border-color: var(--dark-blue);
-    box-shadow: 0 0 0 4px rgba(26, 54, 93, 0.1), 0 4px 15px rgba(0, 0, 0, 0.05);
-    transform: translateY(-2px); /* אפקט ריחוף קל בעת הקלדה */
+    box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
 }
 
 .hero-amount-input {
     flex-grow: 1;
     width: 100%;
-    padding: 10px 15px;
-    font-size: 2.2rem;
+    padding: 8px 10px;
+    font-size: 1.6rem;
     font-weight: 800;
     color: var(--dark-blue);
     border: none;
@@ -159,13 +159,13 @@ body {
     text-align: center;
     outline: none;
     font-family: inherit;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .hero-amount-input::placeholder {
     color: #cbd5e0;
     font-weight: 600;
-    font-size: 1.4rem;
+    font-size: 1.15rem;
     letter-spacing: normal;
 }
 
@@ -179,12 +179,12 @@ body {
     -moz-appearance: textfield;
 }
 
-/* מתג מטבע בסגנון Segmented Control (כמו ב-iOS) */
+/* מתג מטבע בסגנון Segmented Control  */
 .currency-toggle-inline {
     display: flex;
-    background: #f1f5f9; /* רקע אפרפר עדין */
-    border-radius: 12px;
-    padding: 4px;
+    background: #f1f5f9; 
+    border-radius: 8px;
+    padding: 3px;
     gap: 2px;
     flex-shrink: 0;
 }
@@ -193,15 +193,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 50px;
-    height: 42px;
-    font-size: 1.3rem;
+    min-width: 42px;
+    height: 36px;
+    font-size: 1.15rem;
     font-weight: 800;
     cursor: pointer;
     border: none;
     background: transparent;
-    color: #94a3b8; /* צבע אפור כהה למצב כבוי */
-    border-radius: 8px;
+    color: #94a3b8; 
+    border-radius: 6px;
     transition: all 0.25s ease;
     font-family: inherit;
 }
@@ -212,9 +212,9 @@ body {
 }
 
 .curr-btn.active {
-    background: #ffffff; /* פיל לבן (Pill) */
+    background: #ffffff; 
     color: var(--dark-blue);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.05); /* צללית תלת מימדית קטנה */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.05); 
 }
 /* ================================================= */
 
@@ -305,7 +305,7 @@ body {
 [dir="ltr"] .sol-percent { text-align: right; }
 [dir="ltr"] .personal-area-btn { right: auto !important; left: 20px !important; }
 
-/* הפיכת הסדר באנגלית (כדי שסימן הדולר יישאר נכון חזותית) */
+/* הפיכת הסדר באנגלית */
 [dir="ltr"] .unified-amount-wrapper { flex-direction: row-reverse; }
 
 @media (max-width: 900px) {
