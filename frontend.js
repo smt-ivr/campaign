@@ -9,6 +9,7 @@ let solicitorLoaded = false;
 let selectedCurrency = '1'; 
 let minAmountLimit = 0;
 let currentLang = 'he';
+let fetchedCampaignName = null; // שמירת השם למניעת מחיקה במעבר שפות
 
 const formatMoney = (num) => num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -41,7 +42,8 @@ const translations = {
         successTitle: "תזכו למצוות!",
         successMsg: "התרומה התקבלה בהצלחה.\\nאישור עסקה:",
         solPrefix: "מתרים",
-        personalArea: "אזור אישי מתרימים"
+        personalArea: "אזור אישי מתרימים",
+        recommendationTitle: "המלצה"
     },
     en: {
         loadingTitle: "Loading...",
@@ -71,7 +73,8 @@ const translations = {
         successTitle: "Thank You!",
         successMsg: "Donation received successfully.\\nTransaction ID:",
         solPrefix: "Solicitor",
-        personalArea: "Solicitor Login"
+        personalArea: "Solicitor Login",
+        recommendationTitle: "Recommendation"
     }
 };
 
@@ -211,9 +214,10 @@ async function fetchCampaignInfo() {
         
         if (result.status === 'success') {
             const data = result.data;
-            document.getElementById('campaign-title').innerText = data.campaign_name || t('defaultCampaignName');
-            document.getElementById('target-amount').innerText = '₪' + data.target.toLocaleString('en-US');
+            fetchedCampaignName = data.campaign_name;
+            updateCampaignTitle();
             
+            document.getElementById('target-amount').innerText = '₪' + data.target.toLocaleString('en-US');
             document.getElementById('total-raised').innerText = '₪' + formatMoney(data.total_raised);
             
             const ilsBadge = document.getElementById('total-ils-badge');
@@ -232,6 +236,14 @@ async function fetchCampaignInfo() {
             }, 100);
         }
     } catch (err) { console.error(err); }
+}
+
+function updateCampaignTitle() {
+    const titleEl = document.getElementById('campaign-title');
+    if (titleEl) {
+        titleEl.removeAttribute('data-i18n'); // מונע מחיקה על ידי פונקציית התרגום
+        titleEl.innerText = fetchedCampaignName || t('defaultCampaignName');
+    }
 }
 
 async function fetchSolicitors() {
@@ -443,6 +455,14 @@ window.addEventListener('message', function(event) {
 
     if (event.data.Name === 'Height') {
         document.getElementById('iframe-loader').style.display = 'none';
+        
+        // התאמה דינמית של גובה הסליקה (שומר על מידות קומפקטיות ללא גלילה כפולה)
+        if (event.data.Value) {
+            const h = parseInt(event.data.Value);
+            if (h > 50) {
+                document.querySelector('.payment-area').style.height = h + 'px';
+            }
+        }
     }
     
     if (event.data.Name === 'TransactionResponse') {
@@ -508,14 +528,13 @@ window.setLanguage = function(lang) {
     document.documentElement.lang = currentLang;
     document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
     
-    // החלפת מטבע בהתאם לשפה
     selectedCurrency = currentLang === 'en' ? '2' : '1'; 
     updateCurrencyVisuals(selectedCurrency);
     
     applyTranslations();
     updateLangButtons();
+    updateCampaignTitle(); // מבטיח ששם הקמפיין לא יעלם
     
-    // רענון טופס סליקה
     document.getElementById('iframe-loader').style.display = 'flex';
     initIframe();
 };
@@ -534,9 +553,10 @@ function updateLangButtons() {
     }
 }
 
+// פתיחת תמונה בטוחה שמונעת לחיצה ימנית וגרירה
 window.showImage = function(src) {
     document.getElementById('modal-title').innerText = '';
-    document.getElementById('modal-text').innerHTML = '<img src="' + src + '" style="max-width:100%; border-radius:8px; display:block; margin:0 auto;">';
+    document.getElementById('modal-text').innerHTML = '<img src="' + src + '" style="max-width:100%; border-radius:8px; display:block; margin:0 auto; pointer-events:none; user-select:none;" draggable="false" oncontextmenu="return false;">';
     document.getElementById('modal-icon').className = ''; 
     document.getElementById('modal-overlay').classList.add('show');
     document.getElementById('custom-modal').classList.add('show');
