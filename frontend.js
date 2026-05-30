@@ -133,11 +133,11 @@ function applyTranslations() {
 function parseUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
     
+    // שליפת מתרים
     const idParam = urlParams.get('id') || urlParams.get('solicitor');
     if (idParam) {
         lockedSolicitorId = parseInt(idParam);
         isSolicitorRequired = true;
-        // מעכשיו שומרים ב-localStorage כדי שיישאר קבוע גם בסגירת הדפדפן
         localStorage.setItem('savedSolicitorId', lockedSolicitorId); 
     } else {
         const savedId = localStorage.getItem('savedSolicitorId');
@@ -149,29 +149,40 @@ function parseUrlParameters() {
 
     if (isSolicitorRequired) {
         const sel = document.getElementById('solicitor-select');
-        sel.innerHTML = '<option value="">' + t('loadingSolicitors') + '</option>';
+        if (sel) sel.innerHTML = '<option value="">' + t('loadingSolicitors') + '</option>';
     }
 
+    // סכום קבוע
     const amountParam = urlParams.get('amount');
     const amountEl = document.getElementById('custom-amount');
-    if (amountParam) {
+    if (amountParam && amountEl) {
         amountEl.value = amountParam;
         currentDonationAmount = parseFloat(amountParam);
     }
 
+    // מטבע
     const currParam = urlParams.get('currency');
     if (currParam) {
         updateCurrencyVisuals(currParam);
     }
 
+    // נעילת סכום
     const lockParam = urlParams.get('lock_amount');
-    if (lockParam === '1' || lockParam === 'true') {
+    if ((lockParam === '1' || lockParam === 'true') && amountEl) {
         amountEl.disabled = true;
     }
 
     const minParam = urlParams.get('min_amount');
     if (minParam) {
         minAmountLimit = parseFloat(minParam);
+    }
+
+    // מחיקת ה-ID מה-URL כדי שיראה נקי (אך עדיין שמור בזיכרון)
+    if (window.history.replaceState && idParam) {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.delete('id');
+        currentUrl.searchParams.delete('solicitor');
+        window.history.replaceState({}, document.title, currentUrl.toString());
     }
 }
 
@@ -258,10 +269,10 @@ async function fetchSolicitors() {
                         '</div>' +
                     '</div>';
                     
-                selectEl.innerHTML += '<option value="' + sol.id + '">' + sol.name + '</option>';
+                if (selectEl) selectEl.innerHTML += '<option value="' + sol.id + '">' + sol.name + '</option>';
             });
 
-            if (isSolicitorRequired) {
+            if (isSolicitorRequired && selectEl) {
                 let found = result.data.find(s => s.id == lockedSolicitorId);
                 if (!found) selectEl.innerHTML += '<option value="' + lockedSolicitorId + '">' + t('solPrefix') + ' ' + lockedSolicitorId + '</option>';
                 
@@ -396,8 +407,9 @@ function processPayment() {
 
     let rawComment = document.getElementById('comment').value || '';
     const solSelect = document.getElementById('solicitor-select');
-    const solName = solSelect.options[solSelect.selectedIndex]?.text || '';
-    if (solSelect.value) rawComment += ' | Solicitor: ' + solName;
+    const solName = solSelect ? (solSelect.options[solSelect.selectedIndex]?.text || '') : '';
+    const finalSolId = solSelect ? solSelect.value : (lockedSolicitorId || '');
+    if (finalSolId && solName) rawComment += ' | Solicitor: ' + solName;
 
     const iframe = document.getElementById('NedarimFrame');
     iframe.contentWindow.postMessage({
@@ -414,7 +426,7 @@ function processPayment() {
             'Groupe': campaignConfig.groupe,
             'Category': campaignConfig.category,
             'Comment': rawComment,
-            'Param1': solSelect.value, 
+            'Param1': finalSolId, 
             'PaymentType': 'Ragil',
             'Currency': selectedCurrency, 
             'CallBack': API_BASE_URL + '/webhook'
@@ -447,7 +459,9 @@ window.addEventListener('message', function(event) {
 });
 
 function resetForm() {
-    document.getElementById('custom-amount').value = '';
+    const amountEl = document.getElementById('custom-amount');
+    if (!amountEl.disabled) amountEl.value = '';
+    
     document.getElementById('fname').value = '';
     document.getElementById('lname').value = '';
     document.getElementById('email').value = '';
@@ -457,10 +471,12 @@ function resetForm() {
     
     ['email', 'phone', 'zeout'].forEach(id => document.getElementById(id).classList.remove('input-error'));
     
-    currentDonationAmount = 0;
-    const payBtn = document.getElementById('pay-btn');
-    payBtn.innerText = t('enterAmountBtn');
-    payBtn.disabled = true;
+    if (!amountEl.disabled) {
+        currentDonationAmount = 0;
+        const payBtn = document.getElementById('pay-btn');
+        payBtn.innerText = t('enterAmountBtn');
+        payBtn.disabled = true;
+    }
     
     document.getElementById('iframe-loader').style.display = 'flex';
     initIframe();
