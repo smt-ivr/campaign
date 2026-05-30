@@ -24,17 +24,22 @@ body {
 
 * { box-sizing: border-box; }
 
-.elegant-wrapper { width: 100%; max-width: 1100px; padding: 10px; }
-
-/* ======== כפתורים עליונים מרחפים (אזור אישי ושפה) ======== */
-.top-controls {
-    position: absolute !important;
-    top: 20px !important;
-    right: 20px !important;
+.elegant-wrapper { 
+    width: 100%; 
+    max-width: 1100px; 
+    padding: 10px; 
     display: flex;
+    flex-direction: column;
+}
+
+/* ======== כפתורים עליונים מיושרים לכרטיס ======== */
+.top-controls {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; /* מתיישר לטבעיות של כיוון השפה (ימין בעברית, שמאל באנגלית) */
     align-items: center;
     gap: 12px;
-    z-index: 99999 !important;
+    margin-bottom: 12px;
 }
 
 .personal-area-btn {
@@ -45,7 +50,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     transition: 0.3s;
     text-decoration: none;
     font-weight: 700;
@@ -55,25 +60,32 @@ body {
 .personal-area-btn:hover { background: var(--gold); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(212,175,55,0.3); }
 .personal-area-btn svg { flex-shrink: 0; }
 
-.lang-switch {
+.lang-toggle-inline {
+    display: flex;
     background: #ffffff;
-    color: var(--dark-blue);
-    border: 2px solid var(--border);
-    padding: 8px 18px;
     border-radius: 30px;
-    font-size: 1rem;
+    padding: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
+}
+.lang-btn {
+    padding: 6px 16px;
+    font-size: 0.95rem;
     font-weight: 800;
     cursor: pointer;
-    transition: 0.3s;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    border-radius: 25px;
+    transition: all 0.3s ease;
     font-family: inherit;
 }
-.lang-switch:hover {
-    border-color: var(--dark-blue);
-    color: var(--gold);
+.lang-btn.active {
+    background: var(--dark-blue);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
-
-[dir="ltr"] .top-controls { right: auto !important; left: 20px !important; flex-direction: row-reverse; }
+.lang-btn:hover:not(.active) { color: var(--dark-blue); }
 /* ========================================================= */
 
 .main-card {
@@ -84,7 +96,7 @@ body {
     align-items: stretch;
     overflow: hidden;
     height: auto;
-    max-height: 95vh;
+    max-height: 90vh;
     width: 100%;
 }
 
@@ -301,14 +313,9 @@ body {
 @media (max-width: 900px) {
     body { overflow: auto; padding: 10px; height: auto; }
     
-    .top-controls {
-        top: 15px !important;
-        right: 15px !important;
-        left: 15px !important;
-        justify-content: space-between;
-    }
+    .top-controls { justify-content: space-between; }
     
-    .main-card { flex-direction: column; max-height: none; height: auto; display: flex; margin-top: 70px; }
+    .main-card { flex-direction: column; max-height: none; height: auto; display: flex; margin-top: 0; }
     .info-panel, .info-content { display: contents; }
     .info-content h1 { background: var(--dark-blue); color: var(--gold); margin: 0; padding: 25px 15px 5px 15px; order: 1; font-size: 1.6rem; }
     .elegant-stats { background: var(--dark-blue); color: white; margin: 0; padding: 0 15px 15px 15px; order: 2; gap: 12px; }
@@ -330,7 +337,7 @@ body {
 
 @media (max-width: 480px) {
     .personal-area-btn { padding: 6px 14px; font-size: 0.95rem; }
-    .lang-switch { padding: 6px 14px; font-size: 0.95rem; }
+    .lang-btn { padding: 6px 12px; font-size: 0.9rem; }
     .compact-form { grid-template-columns: 1fr; }
     #comment, #fname, #lname, #phone, #zeout, #email, #solicitor-select { grid-column: span 1; }
 }
