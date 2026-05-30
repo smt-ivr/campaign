@@ -59,15 +59,12 @@ export const htmlContent = `<!DOCTYPE html>
             <section class="donate-panel">
                 <h2 data-i18n="donateTitle">השותפות שלך</h2>
                 
-                <div class="amount-wrapper">
-                    <div class="currency-toggle">
+                <div class="unified-amount-wrapper">
+                    <div class="currency-toggle-inline" id="currency-toggle">
                         <button type="button" class="curr-btn active" data-val="1">₪</button>
                         <button type="button" class="curr-btn" data-val="2">$</button>
                     </div>
-                    <div class="input-symbol-wrapper">
-                        <span class="floating-symbol">₪</span>
-                        <input type="number" id="custom-amount" data-i18n-placeholder="enterAmount" placeholder="סכום לתרומה" class="hero-amount-input" autofocus>
-                    </div>
+                    <input type="number" id="custom-amount" data-i18n-placeholder="enterAmount" placeholder="סכום לתרומה" class="hero-amount-input" autofocus>
                 </div>
 
                 <div class="compact-form">
