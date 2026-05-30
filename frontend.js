@@ -14,6 +14,8 @@ const formatMoney = (num) => num.toLocaleString('en-US', { minimumFractionDigits
 
 const translations = {
     he: {
+        loadingTitle: "טוען...",
+        defaultCampaignName: "קמפיין",
         raisedFrom: "מתוך",
         solicitorsTitle: "מתרימי הקמפיין",
         loadingData: "טוען נתונים...",
@@ -41,6 +43,8 @@ const translations = {
         solPrefix: "מתרים"
     },
     en: {
+        loadingTitle: "Loading...",
+        defaultCampaignName: "Campaign",
         raisedFrom: "raised out of",
         solicitorsTitle: "Campaign Solicitors",
         loadingData: "Loading data...",
@@ -192,7 +196,7 @@ async function fetchCampaignInfo() {
         
         if (result.status === 'success') {
             const data = result.data;
-            document.getElementById('campaign-title').innerText = data.campaign_name || 'Campaign';
+            document.getElementById('campaign-title').innerText = data.campaign_name || t('defaultCampaignName');
             document.getElementById('target-amount').innerText = '₪' + data.target.toLocaleString('en-US');
             
             document.getElementById('total-raised').innerText = '₪' + formatMoney(data.total_raised);
