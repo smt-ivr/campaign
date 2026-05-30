@@ -3,24 +3,29 @@ export const htmlContent = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>קמפיין הכנסת כלה</title>
+    <title>קמפיין</title>
     <link rel="stylesheet" href="/campaign/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="top-controls">
-        <button class="lang-switch" onclick="toggleLanguage()" id="lang-toggle">English</button>
-        <a href="/campaign/dashboard" class="personal-area-btn" title="כניסה למתרימים">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <span data-i18n="personalArea">אזור אישי מתרימים</span>
-        </a>
-    </div>
-
     <div class="elegant-wrapper">
+        
+        <div class="top-controls">
+            <a href="/campaign/dashboard" class="personal-area-btn" title="כניסה למתרימים">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span data-i18n="personalArea">אזור אישי מתרימים</span>
+            </a>
+
+            <div class="lang-toggle-inline">
+                <button type="button" class="lang-btn active" id="btn-lang-he" onclick="setLanguage('he')">עברית</button>
+                <button type="button" class="lang-btn" id="btn-lang-en" onclick="setLanguage('en')">EN</button>
+            </div>
+        </div>
+
         <main class="main-card">
             
             <section class="info-panel">
