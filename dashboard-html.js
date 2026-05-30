@@ -48,10 +48,18 @@ export const dashboardHtml = `<!DOCTYPE html>
                 <div class="stat-box">
                     <span>סך הכל גויס</span>
                     <strong id="dash-raised">₪0</strong>
+                    <div class="currency-breakdown">
+                        <span class="badge badge-ils" id="dash-ils" title="שקלים">₪0</span>
+                        <span class="badge badge-usd" id="dash-usd" title="דולרים">$0</span>
+                    </div>
                 </div>
                 <div class="stat-box">
                     <span>יעד נוכחי</span>
                     <strong id="dash-target">₪0</strong>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="dash-progress" style="width: 0%;"></div>
+                    </div>
+                    <span id="dash-percentage" class="progress-text">0%</span>
                 </div>
             </div>
 
@@ -69,6 +77,13 @@ export const dashboardHtml = `<!DOCTYPE html>
                 <p>שתף את הקישור הזה כדי שתרומות יכנסו ישירות ליעד שלך:</p>
                 <input type="text" id="personal-link" readonly>
                 <button onclick="copyLink()" class="copy-btn">העתק קישור</button>
+            </div>
+
+            <div class="donations-history">
+                <h3>התרומות האחרונות שלך</h3>
+                <div id="donations-list" class="donations-list">
+                    <p style="text-align:center; color:#718096; font-size:0.9rem;">טוען נתונים...</p>
+                </div>
             </div>
         </div>
 
