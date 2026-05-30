@@ -178,11 +178,11 @@ body {
 .sa-error { border-color: #e53e3e; }
 .sa-error::before { content: '✗'; font-size: 35px; color: #e53e3e; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
-/* כפתור אזור אישי */
+/* כפתור אזור אישי - תוקן כך שיהיה מקובע למעלה תמיד */
 .personal-area-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
     background: var(--dark-blue);
     color: white;
     width: 45px;
@@ -192,7 +192,7 @@ body {
     justify-content: center;
     align-items: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    z-index: 1000;
+    z-index: 99999 !important;
     transition: 0.3s;
     cursor: pointer;
 }
@@ -207,7 +207,7 @@ body {
 [dir="ltr"] .floating-symbol { right: auto; left: 15px; }
 [dir="ltr"] .hero-amount-input { padding: 12px 12px 12px 40px; }
 [dir="ltr"] .scroll-list { padding-right: 0; padding-left: 5px; }
-[dir="ltr"] .personal-area-btn { right: auto; left: 20px; }
+[dir="ltr"] .personal-area-btn { right: auto !important; left: 20px !important; }
 
 @media (max-width: 900px) {
     body { overflow: auto; padding: 10px; height: auto; }
