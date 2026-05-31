@@ -44,7 +44,7 @@ const translations = {
         personalArea: "מתרימים"
     },
     en: {
-        loadingTitle: "Loading...",
+        loadingTitle: "קמפיין הכנסת כלה",
         defaultCampaignName: "Campaign",
         raisedFrom: "raised out of",
         solicitorsTitle: "Campaign Solicitors",
