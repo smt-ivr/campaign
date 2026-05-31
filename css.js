@@ -14,13 +14,13 @@ body {
     background: linear-gradient(135deg, #f6f8fd 0%, #eef2f5 100%);
     color: var(--text);
     margin: 0;
-    min-height: 100vh; /* מאפשר לגובה לגדול בטבעיות */
+    min-height: 100vh; 
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* מצמיד את האתר למעלה */
+    align-items: flex-start; 
     padding: 20px 10px 40px 10px;
     overflow-x: hidden;
-    overflow-y: auto; /* מאפשר גלילה טבעית בדפדפן */
+    overflow-y: auto; 
 }
 
 * { box-sizing: border-box; }
@@ -28,22 +28,17 @@ body {
 .elegant-wrapper { 
     width: 100%; 
     max-width: 1100px; 
-}
-
-/* ======== כפתורים עליונים חופשיים מחוץ לבלוק ======== */
-.top-controls {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
     display: flex;
-    justify-content: space-between;
-    pointer-events: none; /* מאפשר לחיצה על אזורים ריקים ביניהם */
-    z-index: 100;
+    flex-direction: column;
 }
 
-.top-controls > * {
-    pointer-events: auto; /* מחזיר לחיצה על הכפתורים עצמם */
+/* ======== כפתורים עליונים ======== */
+.top-controls {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* דוחף את הכפתורים לקצוות */
+    align-items: center;
+    margin-bottom: 15px; /* מרווח נקי מעל הכרטיס המרכזי */
 }
 
 .personal-area-btn {
@@ -100,7 +95,6 @@ body {
     align-items: stretch;
     overflow: hidden; 
     width: 100%;
-    /* הוסרה מגבלת ה-max-height כדי לאפשר גלילה */
 }
 
 .info-panel {
@@ -325,17 +319,8 @@ body {
 [dir="ltr"] .sol-percent { text-align: right; }
 [dir="ltr"] .unified-amount-wrapper { flex-direction: row-reverse; }
 
-@media (max-width: 1150px) {
-    /* נותן מרווח עליון כשהמסך מתקרב לגודל הכרטיס המקסימלי */
-    body { padding-top: 70px; }
-}
-
 @media (max-width: 900px) {
-    body { padding-top: 70px; padding-bottom: 20px; }
-    
-    .top-controls {
-        top: 15px; left: 15px; right: 15px;
-    }
+    body { padding-top: 20px; padding-bottom: 20px; }
     
     .main-card { flex-direction: column; display: flex; }
     .info-panel, .info-content { display: contents; }
@@ -358,10 +343,8 @@ body {
 }
 
 @media (max-width: 480px) {
-    body { padding-top: 65px; }
     .personal-area-btn { padding: 6px 14px; font-size: 0.95rem; }
     .lang-btn { padding: 6px 12px; font-size: 0.9rem; }
-    .top-controls { top: 10px; left: 10px; right: 10px; }
     .compact-form { grid-template-columns: 1fr; }
     #comment, #fname, #lname, #phone, #zeout, #email, #solicitor-select { grid-column: span 1; }
 }
