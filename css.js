@@ -14,13 +14,13 @@ body {
     background: linear-gradient(135deg, #f6f8fd 0%, #eef2f5 100%);
     color: var(--text);
     margin: 0;
-    height: 100vh;
+    min-height: 100vh; /* מאפשר לגובה לגדול בטבעיות */
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* השינוי: מיישר את הכל למעלה במקום לאמצע */
-    padding-top: 15px; /* מרווח קטן מלמעלה שלא יידבק לחלוטין לקצה */
-    overflow: auto;
-    text-align: center;
+    align-items: flex-start; /* מצמיד את האתר למעלה */
+    padding: 20px 10px 40px 10px;
+    overflow-x: hidden;
+    overflow-y: auto; /* מאפשר גלילה טבעית בדפדפן */
 }
 
 * { box-sizing: border-box; }
@@ -28,19 +28,22 @@ body {
 .elegant-wrapper { 
     width: 100%; 
     max-width: 1100px; 
-    padding: 10px; 
-    display: flex;
-    flex-direction: column;
 }
 
-/* ======== כפתורים עליונים ======== */
+/* ======== כפתורים עליונים חופשיים מחוץ לבלוק ======== */
 .top-controls {
-    width: 100%;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
     display: flex;
-    justify-content: space-between; /* השינוי: זורק את הכפתורים לשני הצדדים (ימין ושמאל) */
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
+    justify-content: space-between;
+    pointer-events: none; /* מאפשר לחיצה על אזורים ריקים ביניהם */
+    z-index: 100;
+}
+
+.top-controls > * {
+    pointer-events: auto; /* מחזיר לחיצה על הכפתורים עצמם */
 }
 
 .personal-area-btn {
@@ -95,10 +98,9 @@ body {
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     display: flex;
     align-items: stretch;
-    overflow: hidden;
-    height: auto;
-    max-height: 90vh;
+    overflow: hidden; 
     width: 100%;
+    /* הוסרה מגבלת ה-max-height כדי לאפשר גלילה */
 }
 
 .info-panel {
@@ -167,6 +169,7 @@ body {
     flex-grow: 1; 
     position: relative; 
     overflow: hidden; 
+    min-height: 150px;
 }
 .mini-leaderboard h3 { 
     font-size: 1.05rem; 
@@ -293,7 +296,6 @@ body {
     flex-direction: column; 
     justify-content: flex-start; 
     align-items: center; 
-    overflow-y: auto; /* השינוי: מאפשר לגלול אם התוכן ארוך מהגובה */ 
 }
 
 .loader-overlay { position: absolute; inset: 0; background: #f8fafc; border-radius: 6px; border: 1px dashed #cbd5e0; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-light); font-weight: bold; font-size: 0.95rem; z-index: 1; text-align: center; }
@@ -323,12 +325,19 @@ body {
 [dir="ltr"] .sol-percent { text-align: right; }
 [dir="ltr"] .unified-amount-wrapper { flex-direction: row-reverse; }
 
+@media (max-width: 1150px) {
+    /* נותן מרווח עליון כשהמסך מתקרב לגודל הכרטיס המקסימלי */
+    body { padding-top: 70px; }
+}
+
 @media (max-width: 900px) {
-    body { overflow: auto; padding: 10px; height: auto; }
+    body { padding-top: 70px; padding-bottom: 20px; }
     
-    .top-controls { justify-content: space-between; }
+    .top-controls {
+        top: 15px; left: 15px; right: 15px;
+    }
     
-    .main-card { flex-direction: column; max-height: none; height: auto; display: flex; margin-top: 0; }
+    .main-card { flex-direction: column; display: flex; }
     .info-panel, .info-content { display: contents; }
     .info-content h1 { background: var(--dark-blue); color: var(--gold); margin: 0; padding: 25px 15px 5px 15px; order: 1; font-size: 1.6rem; }
     .elegant-stats { background: var(--dark-blue); color: white; margin: 0; padding: 0 15px 15px 15px; order: 2; gap: 12px; }
@@ -336,7 +345,7 @@ body {
     .recommendation-wrapper { order: 3; background: var(--dark-blue); margin: 0; padding-bottom: 20px; }
     .recommendation-img { max-height: 180px; }
 
-    .mini-leaderboard { display: flex !important; width: 100%; order: 4; background: var(--dark-blue); color: white; padding: 10px 20px 25px 20px; position: static; }
+    .mini-leaderboard { display: flex !important; width: 100%; order: 4; background: var(--dark-blue); color: white; padding: 10px 20px 25px 20px; position: static; min-height: auto; }
     .mini-leaderboard h3 { color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.2); margin-top: 0; margin-bottom: 10px; height: auto; }
     .scroll-list { position: static; max-height: 250px; } 
     
@@ -349,8 +358,10 @@ body {
 }
 
 @media (max-width: 480px) {
+    body { padding-top: 65px; }
     .personal-area-btn { padding: 6px 14px; font-size: 0.95rem; }
     .lang-btn { padding: 6px 12px; font-size: 0.9rem; }
+    .top-controls { top: 10px; left: 10px; right: 10px; }
     .compact-form { grid-template-columns: 1fr; }
     #comment, #fname, #lname, #phone, #zeout, #email, #solicitor-select { grid-column: span 1; }
 }
