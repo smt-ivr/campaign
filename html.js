@@ -17,7 +17,7 @@ export const htmlContent = `<!DOCTYPE html>
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span data-i18n="personalArea">אזור אישי מתרימים</span>
+                <span data-i18n="personalArea">מתרימים</span>
             </a>
 
             <div class="lang-toggle-inline">
@@ -37,7 +37,7 @@ export const htmlContent = `<!DOCTYPE html>
             
             <section class="info-panel">
                 <div class="info-content">
-                    <h1 id="campaign-title" data-i18n="loadingTitle">טוען...</h1>
+                    <h1 id="campaign-title" data-i18n="loadingTitle">קמפיין הכנסת כלה</h1>
                     
                     <div class="elegant-stats">
                         <div class="stat-circle">
