@@ -14,7 +14,7 @@ const formatMoney = (num) => num.toLocaleString('en-US', { minimumFractionDigits
 
 const translations = {
     he: {
-        loadingTitle: "טוען...",
+        loadingTitle: "קמפיין הכנסת כלה",
         defaultCampaignName: "קמפיין",
         raisedFrom: "מתוך",
         solicitorsTitle: "מתרימי הקמפיין",
