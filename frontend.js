@@ -1,6 +1,6 @@
 export const jsContent = `const API_BASE_URL = 'https://smti.uk/campaign/api'; 
 let currentDonationAmount = 0;
-let campaignConfig = { mosadId: '', apiValid: '', groupe: '', category: '' };
+let campaignConfig = { mosadId: '', apiValid: '', groupe: '', CallBackMailError: '' };
 
 let lockedSolicitorId = null;
 let isSolicitorRequired = false;
@@ -302,7 +302,7 @@ async function fetchDonationConfig() {
             campaignConfig.mosadId = result.data.mosad_id;
             campaignConfig.apiValid = result.data.api_valid;
             campaignConfig.groupe = result.data.groupe || '';
-            campaignConfig.category = result.data.category || '';
+            campaignConfig.CallBackMailError = result.data.CallBackMailError || '';
             initIframe();
         }
     } catch (err) { console.error(err); }
@@ -427,7 +427,7 @@ function processPayment() {
             'Phone': phoneVal,
             'Zeout': zeoutVal,
             'Groupe': campaignConfig.groupe,
-            'Category': campaignConfig.category,
+            'CallBackMailError': campaignConfig.CallBackMailError,
             'Comment': rawComment,
             'Param1': finalSolId, 
             'PaymentType': 'Ragil',
