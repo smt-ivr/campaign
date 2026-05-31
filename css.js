@@ -17,8 +17,9 @@ body {
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    align-items: flex-start; /* השינוי: מיישר את הכל למעלה במקום לאמצע */
+    padding-top: 15px; /* מרווח קטן מלמעלה שלא יידבק לחלוטין לקצה */
+    overflow: auto;
     text-align: center;
 }
 
@@ -32,11 +33,11 @@ body {
     flex-direction: column;
 }
 
-/* ======== כפתורים עליונים מיושרים לכרטיס ======== */
+/* ======== כפתורים עליונים ======== */
 .top-controls {
     width: 100%;
     display: flex;
-    justify-content: flex-start; /* מתיישר לטבעיות של כיוון השפה (ימין בעברית, שמאל באנגלית) */
+    justify-content: space-between; /* השינוי: זורק את הכפתורים לשני הצדדים (ימין ושמאל) */
     align-items: center;
     gap: 12px;
     margin-bottom: 12px;
@@ -282,7 +283,19 @@ body {
 #solicitor-select { background-color: #e8f4fd; border: 1px solid var(--dark-blue); color: var(--dark-blue); font-weight: 600; }
 #solicitor-select:focus { background-color: #d1e8ff; }
 
-.payment-area { width: 100%; height: 310px; flex-shrink: 0; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+/* ======== אזור התשלום ======== */
+.payment-area { 
+    width: 100%; 
+    height: 310px; 
+    flex-shrink: 0; 
+    position: relative; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start; 
+    align-items: center; 
+    overflow-y: auto; /* השינוי: מאפשר לגלול אם התוכן ארוך מהגובה */ 
+}
+
 .loader-overlay { position: absolute; inset: 0; background: #f8fafc; border-radius: 6px; border: 1px dashed #cbd5e0; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-light); font-weight: bold; font-size: 0.95rem; z-index: 1; text-align: center; }
 .loader-overlay::before { content: ""; width: 35px; height: 35px; margin-bottom: 10px; border: 3px solid #e2e8f0; border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
