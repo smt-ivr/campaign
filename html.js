@@ -17,12 +17,19 @@ export const htmlContent = `<!DOCTYPE html>
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span data-i18n="personalArea">מתרימים</span>
+                <span data-i18n="personalArea">אזור אישי מתרימים</span>
             </a>
 
             <div class="lang-toggle-inline">
                 <button type="button" class="lang-btn active" id="btn-lang-he" onclick="setLanguage('he')">עברית</button>
                 <button type="button" class="lang-btn" id="btn-lang-en" onclick="setLanguage('en')">EN</button>
+            </div>
+        </div>
+
+        <div class="floating-recommendation">
+            <div class="rec-title">המלצה</div>
+            <div class="recommendation-wrapper" onclick="showImage('https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png')" title="לחץ להגדלה">
+                <img src="https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png" alt="המלצה" class="recommendation-img">
             </div>
         </div>
 
@@ -54,10 +61,6 @@ export const htmlContent = `<!DOCTYPE html>
                             
                             <div class="target"><span data-i18n="raisedFrom">מתוך</span> <span id="target-amount">₪0</span></div>
                         </div>
-                    </div>
-
-                    <div class="recommendation-wrapper" onclick="showImage('https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png')" title="לחץ להגדלה">
-                        <img src="https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png" alt="המלצה" class="recommendation-img">
                     </div>
 
                     <div class="mini-leaderboard">
@@ -96,7 +99,7 @@ export const htmlContent = `<!DOCTYPE html>
 
                 <div class="payment-area">
                     <div id="iframe-loader" class="loader-overlay" data-i18n="loadingIframe">טוען סליקה מאובטחת...</div>
-                    <iframe id="NedarimFrame" src="about:blank" scrolling="no"></iframe>
+                    <iframe id="NedarimFrame" src="about:blank" scrolling="auto"></iframe>
                 </div>
                 
                 <button id="pay-btn" class="elegant-submit" disabled data-i18n="enterAmountBtn">הזן סכום</button>
