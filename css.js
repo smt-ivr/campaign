@@ -14,13 +14,13 @@ body {
     background: linear-gradient(135deg, #f6f8fd 0%, #eef2f5 100%);
     color: var(--text);
     margin: 0;
-    min-height: 100vh; /* מאפשר לגובה לגדול בטבעיות */
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* מצמיד את האתר למעלה */
+    align-items: flex-start;
     padding: 20px 10px 40px 10px;
     overflow-x: hidden;
-    overflow-y: auto; /* מאפשר גלילה טבעית בדפדפן */
+    overflow-y: auto;
 }
 
 * { box-sizing: border-box; }
@@ -30,7 +30,7 @@ body {
     max-width: 1100px; 
 }
 
-/* ======== כפתורים עליונים חופשיים מחוץ לבלוק ======== */
+/* ======== כפתורים עליונים ======== */
 .top-controls {
     position: absolute;
     top: 20px;
@@ -38,12 +38,12 @@ body {
     right: 20px;
     display: flex;
     justify-content: space-between;
-    pointer-events: none; /* מאפשר לחיצה על אזורים ריקים ביניהם */
+    pointer-events: none;
     z-index: 100;
 }
 
 .top-controls > * {
-    pointer-events: auto; /* מחזיר לחיצה על הכפתורים עצמם */
+    pointer-events: auto;
 }
 
 .personal-area-btn {
@@ -90,6 +90,42 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
 .lang-btn:hover:not(.active) { color: var(--dark-blue); }
+
+/* ======== עיצוב תמונת ההמלצה (צף בימין) ======== */
+.floating-recommendation {
+    position: absolute;
+    top: 75px;
+    right: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 50;
+    width: 140px;
+}
+.rec-title {
+    font-weight: 800;
+    color: var(--dark-blue);
+    margin-bottom: 5px;
+    font-size: 1.15rem;
+}
+.recommendation-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-in;
+}
+.recommendation-img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s;
+    border: 2px solid white;
+}
+.recommendation-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
 /* ========================================================= */
 
 .main-card {
@@ -100,7 +136,6 @@ body {
     align-items: stretch;
     overflow: hidden; 
     width: 100%;
-    /* הוסרה מגבלת ה-max-height כדי לאפשר גלילה */
 }
 
 .info-panel {
@@ -138,30 +173,6 @@ body {
 
 .animate-fade-in { animation: fadeInBreakdown 0.8s ease-out forwards; opacity: 0; }
 @keyframes fadeInBreakdown { 0% { opacity: 0; transform: translateY(-5px); } 100% { opacity: 1; transform: translateY(0); } }
-
-/* ======== עיצוב תמונת ההמלצה ======== */
-.recommendation-wrapper {
-    margin: 10px 0 15px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: zoom-in;
-    flex-shrink: 0;
-}
-.recommendation-img {
-    max-width: 90%;
-    height: auto;
-    max-height: 120px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-.recommendation-img:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-/* ==================================== */
 
 .mini-leaderboard { 
     display: flex; 
@@ -296,6 +307,7 @@ body {
     flex-direction: column; 
     justify-content: flex-start; 
     align-items: center; 
+    overflow-y: auto;
 }
 
 .loader-overlay { position: absolute; inset: 0; background: #f8fafc; border-radius: 6px; border: 1px dashed #cbd5e0; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-light); font-weight: bold; font-size: 0.95rem; z-index: 1; text-align: center; }
@@ -326,7 +338,6 @@ body {
 [dir="ltr"] .unified-amount-wrapper { flex-direction: row-reverse; }
 
 @media (max-width: 1150px) {
-    /* נותן מרווח עליון כשהמסך מתקרב לגודל הכרטיס המקסימלי */
     body { padding-top: 70px; }
 }
 
@@ -337,19 +348,26 @@ body {
         top: 15px; left: 15px; right: 15px;
     }
     
+    .floating-recommendation {
+        position: static;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .recommendation-img { max-height: 180px; width: auto; }
+
     .main-card { flex-direction: column; display: flex; }
     .info-panel, .info-content { display: contents; }
+    
     .info-content h1 { background: var(--dark-blue); color: var(--gold); margin: 0; padding: 25px 15px 5px 15px; order: 1; font-size: 1.6rem; }
     .elegant-stats { background: var(--dark-blue); color: white; margin: 0; padding: 0 15px 15px 15px; order: 2; gap: 12px; }
     
-    .recommendation-wrapper { order: 3; background: var(--dark-blue); margin: 0; padding-bottom: 20px; }
-    .recommendation-img { max-height: 180px; }
-
-    .mini-leaderboard { display: flex !important; width: 100%; order: 4; background: var(--dark-blue); color: white; padding: 10px 20px 25px 20px; position: static; min-height: auto; }
+    /* פאנל התשלום מקבל סדר 3 כדי להופיע לפני מתרימי הקמפיין */
+    .donate-panel { width: 100%; order: 3; padding: 25px 20px; background: var(--card-bg); }
+    
+    /* מתרימי הקמפיין מקבל סדר 4 כדי להופיע בסוף הדף */
+    .mini-leaderboard { display: flex !important; width: 100%; order: 4; background: var(--dark-blue); color: white; padding: 20px; position: static; min-height: auto; }
     .mini-leaderboard h3 { color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.2); margin-top: 0; margin-bottom: 10px; height: auto; }
     .scroll-list { position: static; max-height: 250px; } 
-    
-    .donate-panel { width: 100%; order: 5; padding: 25px 20px; background: var(--card-bg); }
     
     .solicitor-item { border-bottom: 1px solid rgba(255,255,255,0.1); }
     .sol-stats { color: #e2e8f0; }
