@@ -41,7 +41,7 @@ const translations = {
         successTitle: "תזכו למצוות!",
         successMsg: "התרומה התקבלה בהצלחה.\\nאישור עסקה:",
         solPrefix: "מתרים",
-        personalArea: "אזור אישי מתרימים"
+        personalArea: "מתרימים"
     },
     en: {
         loadingTitle: "Loading...",
