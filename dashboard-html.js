@@ -4,6 +4,7 @@ export const dashboardHtml = `<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>אזור מתרימים</title>
+    <link rel="icon" type="image/png" href="https://smt-tel-manager.netlify.app/smt.png">
     <link rel="stylesheet" href="/campaign/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -54,19 +55,19 @@ export const dashboardHtml = `<!DOCTYPE html>
                     <div class="stats-grid">
                         <div class="stat-box">
                             <span>סך הכל גויס</span>
-                            <strong id="dash-raised">₪0</strong>
+                            <strong id="dash-raised"><span class="mini-spinner"></span></strong>
                             <div class="currency-breakdown">
-                                <span class="badge badge-ils" id="dash-ils" title="שקלים">₪0</span>
-                                <span class="badge badge-usd" id="dash-usd" title="דולרים">$0</span>
+                                <span class="badge badge-ils" id="dash-ils" title="שקלים"><span class="mini-spinner"></span></span>
+                                <span class="badge badge-usd" id="dash-usd" title="דולרים"><span class="mini-spinner"></span></span>
                             </div>
                         </div>
                         <div class="stat-box">
                             <span>יעד נוכחי</span>
-                            <strong id="dash-target">₪0</strong>
+                            <strong id="dash-target"><span class="mini-spinner"></span></strong>
                             <div class="progress-container">
                                 <div class="progress-bar" id="dash-progress" style="width: 0%;"></div>
                             </div>
-                            <span id="dash-percentage" class="progress-text">0%</span>
+                            <span id="dash-percentage" class="progress-text"><span class="mini-spinner"></span></span>
                         </div>
                     </div>
                     
