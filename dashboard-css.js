@@ -22,6 +22,19 @@ body {
 
 * { box-sizing: border-box; }
 
+@keyframes spin { to { transform: rotate(360deg); } }
+.mini-spinner {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    vertical-align: text-bottom;
+    opacity: 0.7;
+}
+
 .back-btn {
     position: fixed !important;
     top: 15px !important;
