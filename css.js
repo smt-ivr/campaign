@@ -25,6 +25,18 @@ body {
 
 * { box-sizing: border-box; }
 
+.mini-spinner {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    vertical-align: text-bottom;
+    opacity: 0.7;
+}
+
 .elegant-wrapper { 
     width: 100%; 
     max-width: 1100px; 
@@ -121,6 +133,8 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     transition: transform 0.3s ease, box-shadow 0.3s;
     border: 2px solid white;
+    -webkit-user-drag: none;
+    user-select: none;
 }
 .recommendation-img:hover {
     transform: scale(1.05);
