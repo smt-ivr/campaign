@@ -4,6 +4,7 @@ export const htmlContent = `<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>קמפיין הכנסת כלה</title>
+    <link rel="icon" type="image/png" href="https://smt-tel-manager.netlify.app/smt.png">
     <link rel="stylesheet" href="/campaign/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -29,7 +30,7 @@ export const htmlContent = `<!DOCTYPE html>
         <div class="floating-recommendation">
             <div class="rec-title">המלצה</div>
             <div class="recommendation-wrapper" onclick="showImage('https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png')" title="לחץ להגדלה">
-                <img src="https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png" alt="המלצה" class="recommendation-img">
+                <img src="https://smt-tel-manager.netlify.app/%D7%94%D7%9E%D7%9C%D7%A6%D7%94.png" alt="המלצה" class="recommendation-img" draggable="false">
             </div>
         </div>
 
@@ -44,22 +45,22 @@ export const htmlContent = `<!DOCTYPE html>
                             <svg viewBox="0 0 36 36" class="circular-chart">
                                 <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                                 <path class="circle" id="progress-circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <text x="18" y="20.35" class="percentage" id="progress-text">0%</text>
+                                <text x="18" y="20.35" class="percentage" id="progress-text"></text>
                             </svg>
                         </div>
                         <div class="stat-text">
-                            <div class="raised" id="total-raised">₪0</div>
+                            <div class="raised" id="total-raised"><span class="mini-spinner"></span></div>
                             
                             <div class="currency-breakdown animate-fade-in">
                                 <div class="currency-badge ils-badge" title="סך הכל בשקלים">
-                                    <span id="total-ils-badge">₪0</span>
+                                    <span id="total-ils-badge"><span class="mini-spinner"></span></span>
                                 </div>
                                 <div class="currency-badge usd-badge" title="סך הכל בדולרים">
-                                    <span id="total-usd-badge">$0</span>
+                                    <span id="total-usd-badge"><span class="mini-spinner"></span></span>
                                 </div>
                             </div>
                             
-                            <div class="target"><span data-i18n="raisedFrom">מתוך</span> <span id="target-amount">₪0</span></div>
+                            <div class="target"><span data-i18n="raisedFrom">מתוך</span> <span id="target-amount"><span class="mini-spinner"></span></span></div>
                         </div>
                     </div>
 
