@@ -136,7 +136,7 @@ function applyTranslations() {
 function parseUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
     
-    const idParam = urlParams.get('id') || urlParams.get('מתרים');
+    const idParam = urlParams.get('id') || urlParams.get('solicitor');
     if (idParam) {
         lockedSolicitorId = parseInt(idParam);
         isSolicitorRequired = true;
