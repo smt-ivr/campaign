@@ -41,7 +41,14 @@ const translations = {
         successTitle: "תזכו למצוות!",
         successMsg: "התרומה התקבלה בהצלחה.\\nאישור עסקה:",
         solPrefix: "מתרים",
-        personalArea: "מתרימים"
+        personalArea: "מתרימים",
+        paymentsLabel: "תשלומים",
+        paymentCalc: "חישוב תשלומים:",
+        paymentsOf: "תשלומים של",
+        perMonth: "בחודש",
+        recentDonations: "תרומות אחרונות",
+        noDonations: "טרם התקבלו תרומות פומביות",
+        closeBtn: "סגור"
     },
     en: {
         loadingTitle: "קמפיין הכנסת כלה",
@@ -71,7 +78,14 @@ const translations = {
         successTitle: "Thank You!",
         successMsg: "Donation received successfully.\\nTransaction ID:",
         solPrefix: "Solicitor",
-        personalArea: "Solicitor Login"
+        personalArea: "Solicitor Login",
+        paymentsLabel: "Payments",
+        paymentCalc: "Payment breakdown:",
+        paymentsOf: "payments of",
+        perMonth: "per month",
+        recentDonations: "Recent Donations",
+        noDonations: "No public donations yet",
+        closeBtn: "Close"
     }
 };
 
@@ -79,6 +93,7 @@ const t = (key) => translations[currentLang][key] || key;
 
 document.addEventListener('DOMContentLoaded', () => {
     initLanguage();
+    injectPaymentsAndDonationsUI();
     document.getElementById('custom-amount').focus();
     parseUrlParameters();
     fetchCampaignInfo();
@@ -131,6 +146,133 @@ function applyTranslations() {
             el.placeholder = translations[currentLang][key];
         }
     });
+    
+    // רענון הלייבלים שהזרקנו דינמית
+    const pLabel = document.getElementById('payments-label-text');
+    if (pLabel) pLabel.innerText = t('paymentsLabel');
+    updatePaymentBreakdown();
+}
+
+function injectPaymentsAndDonationsUI() {
+    // 1. הזרקת שדה תשלומים לשורה של הזנת הסכום
+    const amountGroup = document.querySelector('.amount-input-group') || document.getElementById('custom-amount')?.parentElement;
+    if (amountGroup && !document.getElementById('tashlumim-select')) {
+        amountGroup.style.display = 'flex';
+        amountGroup.style.gap = '10px';
+        amountGroup.style.alignItems = 'center';
+        amountGroup.style.position = 'relative';
+        
+        if (document.getElementById('custom-amount')) {
+            document.getElementById('custom-amount').style.flex = '2';
+        }
+
+        const selectWrapper = document.createElement('div');
+        selectWrapper.className = 'form-group';
+        selectWrapper.style.margin = '0';
+        selectWrapper.style.flex = '1';
+        selectWrapper.innerHTML = \`
+            <select id="tashlumim-select" class="form-input" style="height: 50px; padding: 0 10px; margin: 0;">
+                \${Array.from({length: 12}, (_, i) => \`<option value="\${i+1}">\${i+1}</option>\`).join('')}
+            </select>
+        \`;
+        amountGroup.appendChild(selectWrapper);
+
+        // הוספת אלמנט להצגת חישוב התשלומים מתחת לתיבה
+        const breakdownDiv = document.createElement('div');
+        breakdownDiv.id = 'payments-breakdown-text';
+        breakdownDiv.style.fontSize = '13px';
+        breakdownDiv.style.marginTop = '4px';
+        breakdownDiv.style.color = '#4a5568';
+        breakdownDiv.style.fontWeight = '500';
+        breakdownDiv.style.width = '100%';
+        amountGroup.parentNode.insertBefore(breakdownDiv, amountGroup.nextSibling);
+    }
+
+    // 2. הוספת כפתור לצפייה בתרומות אחרונות ליד אזור הכותרת או ההמלצות
+    const headerTitle = document.getElementById('campaign-title');
+    if (headerTitle && !document.getElementById('btn-view-donations')) {
+        const btnDonations = document.createElement('button');
+        btnDonations.id = 'btn-view-donations';
+        btnDonations.className = 'curr-btn';
+        btnDonations.style.margin = '0 10px';
+        btnDonations.style.padding = '5px 12px';
+        btnDonations.style.fontSize = '14px';
+        btnDonations.style.cursor = 'pointer';
+        btnDonations.style.borderRadius = '20px';
+        btnDonations.style.border = '1px solid #cbd5e1';
+        btnDonations.style.background = '#ffffff';
+        btnDonations.style.display = 'inline-flex';
+        btnDonations.style.alignItems = 'center';
+        btnDonations.style.gap = '5px';
+        btnDonations.innerHTML = '🕒 <span data-i18n="recentDonations">' + t('recentDonations') + '</span>';
+        headerTitle.parentNode.appendChild(btnDonations);
+        
+        btnDonations.addEventListener('click', openDonationsModal);
+    }
+}
+
+function updatePaymentBreakdown() {
+    const amountInput = document.getElementById('custom-amount');
+    const selectTashlumim = document.getElementById('tashlumim-select');
+    const breakdownEl = document.getElementById('payments-breakdown-text');
+    
+    if (!amountInput || !selectTashlumim || !breakdownEl) return;
+    
+    const amount = parseFloat(amountInput.value) || 0;
+    const payments = parseInt(selectTashlumim.value) || 1;
+    const symbol = selectedCurrency === '2' ? '$' : '₪';
+
+    if (amount > 0 && payments > 1) {
+        const perMonth = (amount / payments).toFixed(2);
+        breakdownEl.innerText = t('paymentCalc') + ' ' + payments + ' ' + t('paymentsOf') + ' ' + symbol + parseFloat(perMonth).toLocaleString() + ' ' + t('perMonth');
+        breakdownEl.style.display = 'block';
+    } else {
+        breakdownEl.style.display = 'none';
+    }
+}
+
+async function openDonationsModal() {
+    // בניית מודל דינמי ותצוגה יפה של התרומות האחרונות
+    showModal(t('recentDonations'), t('loadingData'), 'info');
+    
+    // מנקים ומכינים את הגוף של המודל
+    const modalTextEl = document.getElementById('modal-text');
+    modalTextEl.innerHTML = '<div style="text-align:center; padding:20px;">' + t('loadingData') + '</div>';
+    
+    try {
+        const res = await fetch(API_BASE_URL + '/donations-public');
+        const result = await res.json();
+        
+        if (result.status === 'success' && result.data && result.data.length > 0) {
+            let html = '<div style="max-height: 400px; overflow-y: auto; text-align: ' + (currentLang === 'he' ? 'right' : 'left') + '; font-family: inherit; width: 100%; padding: 5px;">';
+            
+            result.data.forEach(don => {
+                const sym = don.currency === '2' ? '$' : '₪';
+                const dateStr = don.created_at ? don.created_at.split(' ')[0] : '';
+                
+                html += \`
+                    <div style="border-bottom: 1px solid #e2e8f0; padding: 12px 8px; display: flex; flex-direction: column; gap: 4px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold;">
+                            <span style="color: #2d3748; font-size: 15px;">\${don.donor_name || 'תורם אנונימי'}</span>
+                            <span style="color: #2b6cb0; font-size: 16px; background: #ebf8ff; padding: 2px 10px; border-radius: 12px;">\${sym}\${formatMoney(don.amount)}</span>
+                        </div>
+                        \${don.comment ? \`<div style="color: #4a5568; font-size: 13px; font-style: italic; background: #f7fafc; padding: 6px; border-radius: 4px; margin-top: 2px;">\${don.comment}</div>\` : ''}
+                        <div style="color: #a0aec0; font-size: 11px; display: flex; justify-content: space-between; margin-top: 2px;">
+                            <span>\${dateStr}</span>
+                        </div>
+                    </div>
+                \`;
+            });
+            
+            html += '</div>';
+            modalTextEl.innerHTML = html;
+        } else {
+            modalTextEl.innerHTML = '<div style="text-align:center; padding:20px; color:#718096;">' + t('noDonations') + '</div>';
+        }
+    } catch (err) {
+        console.error(err);
+        modalTextEl.innerHTML = '<div style="text-align:center; padding:20px; color:#e53e3e;">' + t('errTitle') + '</div>';
+    }
 }
 
 function parseUrlParameters() {
@@ -201,7 +343,9 @@ function updateCurrencyVisuals(val) {
         else btn.classList.remove('active');
     });
     
-    document.getElementById('custom-amount').dispatchEvent(new Event('input'));
+    const amountInput = document.getElementById('custom-amount');
+    if (amountInput) amountInput.dispatchEvent(new Event('input'));
+    updatePaymentBreakdown();
 }
 
 async function fetchCampaignInfo() {
@@ -230,6 +374,9 @@ async function fetchCampaignInfo() {
                 const text = document.getElementById('progress-text');
                 if (text) text.textContent = percentage + '%';
             }, 100);
+
+            // וידוא מחדש שהכפתור קיים גם לאחר רענון הכותרת
+            injectPaymentsAndDonationsUI();
         }
     } catch (err) { console.error(err); }
 }
@@ -335,6 +482,7 @@ function validateField(inputEl, type) {
 
 function setupEventListeners() {
     const amountInput = document.getElementById('custom-amount');
+    const tashlumimSelect = document.getElementById('tashlumim-select');
     
     document.querySelectorAll('.curr-btn').forEach(btn => {
         btn.addEventListener('click', (e) => updateCurrencyVisuals(e.target.dataset.val));
@@ -348,10 +496,18 @@ function setupEventListeners() {
         document.getElementById(id).addEventListener('input', function() { this.classList.remove('input-error'); });
     });
 
+    if (tashlumimSelect) {
+        tashlumimSelect.addEventListener('change', () => {
+            updatePaymentBreakdown();
+        });
+    }
+
     amountInput.addEventListener('input', () => {
         const amount = parseFloat(amountInput.value) || 0;
         const payBtn = document.getElementById('pay-btn');
         const symbol = selectedCurrency === '2' ? '$' : '₪';
+        
+        updatePaymentBreakdown();
         
         if (isSolicitorRequired && !solicitorLoaded) {
              payBtn.innerText = t('identifyingSol'); payBtn.disabled = true; return;
@@ -415,7 +571,10 @@ function processPayment() {
     const solSelect = document.getElementById('solicitor-select');
     const solName = solSelect ? (solSelect.options[solSelect.selectedIndex]?.text || '') : '';
     const finalSolId = solSelect ? solSelect.value : (lockedSolicitorId || '');
-    if (finalSolId && solName) rawComment += ' | מתרים: ' + solName; // תוקן מ-Solicitor למתרים
+    if (finalSolId && solName) rawComment += ' | מתרים: ' + solName; 
+
+    const tashlumimSelect = document.getElementById('tashlumim-select');
+    const tashlumimVal = tashlumimSelect ? tashlumimSelect.value : '1';
 
     const iframe = document.getElementById('NedarimFrame');
     iframe.contentWindow.postMessage({
@@ -424,7 +583,8 @@ function processPayment() {
             'Mosad': campaignConfig.mosadId,
             'ApiValid': campaignConfig.apiValid,
             'Amount': currentDonationAmount,
-            'ClientName': firstNameVal + ' ' + lastNameVal, // מכריח שליחה של שם פרטי ואז משפחה
+            'Tashlumim': tashlumimVal, // נשלח במיוחד לנדרים פלוס
+            'ClientName': firstNameVal + ' ' + lastNameVal, 
             'FirstName': firstNameVal,
             'LastName': lastNameVal,
             'Mail': emailVal,
@@ -469,6 +629,10 @@ function resetForm() {
     const amountEl = document.getElementById('custom-amount');
     if (!amountEl.disabled) amountEl.value = '';
     
+    const tashlumimSelect = document.getElementById('tashlumim-select');
+    if (tashlumimSelect) tashlumimSelect.value = '1';
+    updatePaymentBreakdown();
+
     document.getElementById('fname').value = '';
     document.getElementById('lname').value = '';
     document.getElementById('email').value = '';
@@ -492,8 +656,16 @@ function resetForm() {
 
 function showModal(title, text, type) {
     document.getElementById('modal-title').innerText = title;
-    document.getElementById('modal-text').innerText = text;
-    document.getElementById('modal-icon').className = 'sa-icon sa-' + type;
+    
+    const modalTextEl = document.getElementById('modal-text');
+    modalTextEl.innerHTML = text; // תמיכה במבנה HTML מוזרק
+    
+    const iconEl = document.getElementById('modal-icon');
+    if (iconEl) {
+        if (type) iconEl.className = 'sa-icon sa-' + type;
+        else iconEl.className = '';
+    }
+    
     document.getElementById('modal-overlay').classList.add('show');
     document.getElementById('custom-modal').classList.add('show');
 }
@@ -541,8 +713,9 @@ function updateLangButtons() {
 window.showImage = function(src) {
     document.getElementById('modal-title').innerText = '';
     document.getElementById('modal-text').innerHTML = '<img src="' + src + '" style="max-width:100%; border-radius:8px; display:block; margin:0 auto;">';
-    document.getElementById('modal-icon').className = ''; 
+    const iconEl = document.getElementById('modal-icon');
+    if (iconEl) iconEl.className = ''; 
     document.getElementById('modal-overlay').classList.add('show');
     document.getElementById('custom-modal').classList.add('show');
 };
-`
+`;
