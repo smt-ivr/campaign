@@ -47,8 +47,7 @@ const translations = {
         paymentsOf: "תשלומים של",
         perMonth: "בחודש",
         recentDonations: "תרומות אחרונות",
-        noDonations: "טרם התקבלו תרומות פומביות",
-        closeBtn: "סגור"
+        noDonations: "טרם התקבלו תרומות פומביות"
     },
     en: {
         loadingTitle: "קמפיין הכנסת כלה",
@@ -84,8 +83,7 @@ const translations = {
         paymentsOf: "payments of",
         perMonth: "per month",
         recentDonations: "Recent Donations",
-        noDonations: "No public donations yet",
-        closeBtn: "Close"
+        noDonations: "No public donations yet"
     }
 };
 
@@ -147,14 +145,133 @@ function applyTranslations() {
         }
     });
     
-    // רענון הלייבלים שהזרקנו דינמית
     const pLabel = document.getElementById('payments-label-text');
     if (pLabel) pLabel.innerText = t('paymentsLabel');
     updatePaymentBreakdown();
 }
 
 function injectPaymentsAndDonationsUI() {
-    // 1. הזרקת שדה תשלומים לשורה של הזנת הסכום
+    // הזרקת סגנונות CSS ייעודיים למודל התרומות ולכפתור המעוצב
+    if (!document.getElementById('custom-donations-styles')) {
+        const style = document.createElement('style');
+        style.id = 'custom-donations-styles';
+        style.innerHTML = \`
+            /* כפתור תרומות מודרני */
+            .btn-donations-modern {
+                background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+                border: 1px solid #cbd5e1;
+                color: #334155;
+                padding: 6px 18px;
+                border-radius: 24px;
+                font-size: 0.95rem;
+                font-weight: 600;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                transition: all 0.3s ease;
+                margin: 10px;
+                font-family: inherit;
+            }
+            .btn-donations-modern:hover {
+                background: #fff;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                border-color: #94a3b8;
+                transform: translateY(-1px);
+            }
+            .btn-donations-modern svg { width: 18px; height: 18px; fill: #ef4444; }
+            
+            /* רקע מודל ייעודי */
+            .donations-overlay {
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+                z-index: 9998; display: none; opacity: 0; transition: opacity 0.3s ease;
+            }
+            .donations-overlay.show { display: block; opacity: 1; }
+            
+            /* קונטיינר מודל תרומות */
+            .donations-modal-container {
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
+                background: #f8fafc; width: 92%; max-width: 550px; height: 85vh; max-height: 700px;
+                border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+                z-index: 9999; display: none; opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                flex-direction: column; overflow: hidden; font-family: inherit;
+            }
+            .donations-modal-container.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            
+            /* כותרת מודל */
+            .donations-modal-header {
+                padding: 20px 24px; border-bottom: 1px solid #e2e8f0;
+                display: flex; justify-content: space-between; align-items: center;
+                background: #ffffff;
+            }
+            .donations-modal-header h3 { margin: 0; font-size: 1.4rem; color: #1e293b; font-weight: 800; display:flex; align-items:center; gap:10px; }
+            .donations-close-btn {
+                background: #f1f5f9; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b;
+                width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                transition: all 0.2s; padding: 0; line-height: 1;
+            }
+            .donations-close-btn:hover { background: #fee2e2; color: #ef4444; }
+            
+            /* גוף מודל (התרומות) */
+            .donations-modal-body {
+                padding: 16px; overflow-y: auto; flex: 1; background: #f8fafc;
+            }
+            
+            /* עיצוב כרטיסיית תרומה בודדת */
+            .donation-card {
+                background: #ffffff; margin-bottom: 16px; padding: 18px; border-radius: 16px;
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+                border: 1px solid #f1f5f9; display: flex; flex-direction: column; gap: 10px;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+            .donation-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); border-color: #e2e8f0; }
+            .donation-header { display: flex; justify-content: space-between; align-items: center; }
+            .donation-name { font-weight: 800; color: #0f172a; font-size: 1.15rem; }
+            .donation-amount { 
+                background: #ecfdf5; color: #059669; padding: 6px 14px; 
+                border-radius: 20px; font-weight: 800; font-size: 1.1rem; border: 1px solid #d1fae5;
+            }
+            .donation-comment {
+                background: #f1f5f9; padding: 12px 14px; border-radius: 10px; color: #475569;
+                font-size: 0.95rem; font-style: italic; position: relative; border-right: 4px solid #cbd5e1;
+            }
+            html[dir="ltr"] .donation-comment { border-right: none; border-left: 4px solid #cbd5e1; }
+            .donation-footer {
+                display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8;
+                margin-top: 4px; font-weight: 500;
+            }
+            
+            /* פס גלילה מותאם */
+            .donations-modal-body::-webkit-scrollbar { width: 8px; }
+            .donations-modal-body::-webkit-scrollbar-track { background: transparent; }
+            .donations-modal-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 2px solid #f8fafc; }
+            .donations-modal-body::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        \`;
+        document.head.appendChild(style);
+    }
+
+    // הזרקת ה-HTML של המודל הייעודי
+    if (!document.getElementById('donations-modal-overlay')) {
+        const modalHtml = \`
+            <div id="donations-modal-overlay" class="donations-overlay"></div>
+            <div id="donations-modal" class="donations-modal-container">
+                <div class="donations-modal-header">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#ef4444"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
+                        <span data-i18n="recentDonations">\${t('recentDonations')}</span>
+                    </h3>
+                    <button class="donations-close-btn" onclick="closeDonationsModal()">&times;</button>
+                </div>
+                <div class="donations-modal-body" id="donations-modal-body"></div>
+            </div>
+        \`;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        document.getElementById('donations-modal-overlay').addEventListener('click', closeDonationsModal);
+    }
+
+    // הזרקת שדה תשלומים (Tashlumim)
     const amountGroup = document.querySelector('.amount-input-group') || document.getElementById('custom-amount')?.parentElement;
     if (amountGroup && !document.getElementById('tashlumim-select')) {
         amountGroup.style.display = 'flex';
@@ -171,13 +288,12 @@ function injectPaymentsAndDonationsUI() {
         selectWrapper.style.margin = '0';
         selectWrapper.style.flex = '1';
         selectWrapper.innerHTML = \`
-            <select id="tashlumim-select" class="form-input" style="height: 50px; padding: 0 10px; margin: 0;">
-                \${Array.from({length: 12}, (_, i) => \`<option value="\${i+1}">\${i+1}</option>\`).join('')}
+            <select id="tashlumim-select" class="form-input" style="height: 50px; padding: 0 10px; margin: 0; cursor:pointer;">
+                \${Array.from({length: 12}, (_, i) => \`<option value="\${i+1}">\${i+1} \${t('paymentsLabel') || 'תשלומים'}</option>\`).join('')}
             </select>
         \`;
         amountGroup.appendChild(selectWrapper);
 
-        // הוספת אלמנט להצגת חישוב התשלומים מתחת לתיבה
         const breakdownDiv = document.createElement('div');
         breakdownDiv.id = 'payments-breakdown-text';
         breakdownDiv.style.fontSize = '13px';
@@ -188,25 +304,17 @@ function injectPaymentsAndDonationsUI() {
         amountGroup.parentNode.insertBefore(breakdownDiv, amountGroup.nextSibling);
     }
 
-    // 2. הוספת כפתור לצפייה בתרומות אחרונות ליד אזור הכותרת או ההמלצות
+    // הזרקת כפתור תרומות אחרונות מעוצב
     const headerTitle = document.getElementById('campaign-title');
     if (headerTitle && !document.getElementById('btn-view-donations')) {
         const btnDonations = document.createElement('button');
         btnDonations.id = 'btn-view-donations';
-        btnDonations.className = 'curr-btn';
-        btnDonations.style.margin = '0 10px';
-        btnDonations.style.padding = '5px 12px';
-        btnDonations.style.fontSize = '14px';
-        btnDonations.style.cursor = 'pointer';
-        btnDonations.style.borderRadius = '20px';
-        btnDonations.style.border = '1px solid #cbd5e1';
-        btnDonations.style.background = '#ffffff';
-        btnDonations.style.display = 'inline-flex';
-        btnDonations.style.alignItems = 'center';
-        btnDonations.style.gap = '5px';
-        btnDonations.innerHTML = '🕒 <span data-i18n="recentDonations">' + t('recentDonations') + '</span>';
-        headerTitle.parentNode.appendChild(btnDonations);
-        
+        btnDonations.className = 'btn-donations-modern';
+        btnDonations.innerHTML = \`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
+            <span data-i18n="recentDonations">\${t('recentDonations')}</span>
+        \`;
+        headerTitle.parentNode.insertBefore(btnDonations, headerTitle.nextSibling);
         btnDonations.addEventListener('click', openDonationsModal);
     }
 }
@@ -231,47 +339,52 @@ function updatePaymentBreakdown() {
     }
 }
 
+window.closeDonationsModal = function() {
+    document.getElementById('donations-modal-overlay').classList.remove('show');
+    document.getElementById('donations-modal').classList.remove('show');
+};
+
 async function openDonationsModal() {
-    // בניית מודל דינמי ותצוגה יפה של התרומות האחרונות
-    showModal(t('recentDonations'), t('loadingData'), 'info');
+    const overlay = document.getElementById('donations-modal-overlay');
+    const modal = document.getElementById('donations-modal');
+    const body = document.getElementById('donations-modal-body');
     
-    // מנקים ומכינים את הגוף של המודל
-    const modalTextEl = document.getElementById('modal-text');
-    modalTextEl.innerHTML = '<div style="text-align:center; padding:20px;">' + t('loadingData') + '</div>';
+    // מציג את המודל החדש במצב טעינה
+    body.innerHTML = '<div style="text-align:center; padding:40px; color:#64748b; font-size:1.1rem;">' + t('loadingData') + '</div>';
+    overlay.classList.add('show');
+    modal.classList.add('show');
     
     try {
         const res = await fetch(API_BASE_URL + '/donations-public');
         const result = await res.json();
         
         if (result.status === 'success' && result.data && result.data.length > 0) {
-            let html = '<div style="max-height: 400px; overflow-y: auto; text-align: ' + (currentLang === 'he' ? 'right' : 'left') + '; font-family: inherit; width: 100%; padding: 5px;">';
+            let html = '';
             
             result.data.forEach(don => {
                 const sym = don.currency === '2' ? '$' : '₪';
                 const dateStr = don.created_at ? don.created_at.split(' ')[0] : '';
                 
                 html += \`
-                    <div style="border-bottom: 1px solid #e2e8f0; padding: 12px 8px; display: flex; flex-direction: column; gap: 4px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold;">
-                            <span style="color: #2d3748; font-size: 15px;">\${don.donor_name || 'תורם אנונימי'}</span>
-                            <span style="color: #2b6cb0; font-size: 16px; background: #ebf8ff; padding: 2px 10px; border-radius: 12px;">\${sym}\${formatMoney(don.amount)}</span>
+                    <div class="donation-card">
+                        <div class="donation-header">
+                            <span class="donation-name">\${don.donor_name || 'תורם אנונימי'}</span>
+                            <span class="donation-amount">\${sym}\${formatMoney(don.amount)}</span>
                         </div>
-                        \${don.comment ? \`<div style="color: #4a5568; font-size: 13px; font-style: italic; background: #f7fafc; padding: 6px; border-radius: 4px; margin-top: 2px;">\${don.comment}</div>\` : ''}
-                        <div style="color: #a0aec0; font-size: 11px; display: flex; justify-content: space-between; margin-top: 2px;">
+                        \${don.comment ? \`<div class="donation-comment">\${don.comment}</div>\` : ''}
+                        <div class="donation-footer">
                             <span>\${dateStr}</span>
                         </div>
                     </div>
                 \`;
             });
-            
-            html += '</div>';
-            modalTextEl.innerHTML = html;
+            body.innerHTML = html;
         } else {
-            modalTextEl.innerHTML = '<div style="text-align:center; padding:20px; color:#718096;">' + t('noDonations') + '</div>';
+            body.innerHTML = '<div style="text-align:center; padding:40px; color:#94a3b8; font-size:1.1rem;">' + t('noDonations') + '</div>';
         }
     } catch (err) {
         console.error(err);
-        modalTextEl.innerHTML = '<div style="text-align:center; padding:20px; color:#e53e3e;">' + t('errTitle') + '</div>';
+        body.innerHTML = '<div style="text-align:center; padding:40px; color:#ef4444; font-weight:bold;">' + t('errTitle') + '</div>';
     }
 }
 
@@ -375,7 +488,6 @@ async function fetchCampaignInfo() {
                 if (text) text.textContent = percentage + '%';
             }, 100);
 
-            // וידוא מחדש שהכפתור קיים גם לאחר רענון הכותרת
             injectPaymentsAndDonationsUI();
         }
     } catch (err) { console.error(err); }
@@ -482,7 +594,13 @@ function validateField(inputEl, type) {
 
 function setupEventListeners() {
     const amountInput = document.getElementById('custom-amount');
-    const tashlumimSelect = document.getElementById('tashlumim-select');
+    
+    // עטיפה של מאזין ל-select אחרי שהוא הוזרק למסך כדי שלא ייפול באתחול
+    document.addEventListener('change', (e) => {
+        if(e.target.id === 'tashlumim-select') {
+            updatePaymentBreakdown();
+        }
+    });
     
     document.querySelectorAll('.curr-btn').forEach(btn => {
         btn.addEventListener('click', (e) => updateCurrencyVisuals(e.target.dataset.val));
@@ -495,12 +613,6 @@ function setupEventListeners() {
     ['email', 'phone', 'zeout'].forEach(id => {
         document.getElementById(id).addEventListener('input', function() { this.classList.remove('input-error'); });
     });
-
-    if (tashlumimSelect) {
-        tashlumimSelect.addEventListener('change', () => {
-            updatePaymentBreakdown();
-        });
-    }
 
     amountInput.addEventListener('input', () => {
         const amount = parseFloat(amountInput.value) || 0;
@@ -583,7 +695,7 @@ function processPayment() {
             'Mosad': campaignConfig.mosadId,
             'ApiValid': campaignConfig.apiValid,
             'Amount': currentDonationAmount,
-            'Tashlumim': tashlumimVal, // נשלח במיוחד לנדרים פלוס
+            'Tashlumim': tashlumimVal, 
             'ClientName': firstNameVal + ' ' + lastNameVal, 
             'FirstName': firstNameVal,
             'LastName': lastNameVal,
@@ -658,7 +770,7 @@ function showModal(title, text, type) {
     document.getElementById('modal-title').innerText = title;
     
     const modalTextEl = document.getElementById('modal-text');
-    modalTextEl.innerHTML = text; // תמיכה במבנה HTML מוזרק
+    modalTextEl.innerHTML = text; 
     
     const iconEl = document.getElementById('modal-icon');
     if (iconEl) {
@@ -684,14 +796,12 @@ window.setLanguage = function(lang) {
     document.documentElement.lang = currentLang;
     document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
     
-    // החלפת מטבע בהתאם לשפה
     selectedCurrency = currentLang === 'en' ? '2' : '1'; 
     updateCurrencyVisuals(selectedCurrency);
     
     applyTranslations();
     updateLangButtons();
     
-    // רענון טופס סליקה
     document.getElementById('iframe-loader').style.display = 'flex';
     initIframe();
 };
