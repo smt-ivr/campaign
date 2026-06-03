@@ -408,11 +408,14 @@ function processPayment() {
     payBtn.innerText = t('processing');
     payBtn.disabled = true;
 
+    const firstNameVal = document.getElementById('fname').value.trim();
+    const lastNameVal = document.getElementById('lname').value.trim();
+
     let rawComment = document.getElementById('comment').value || '';
     const solSelect = document.getElementById('solicitor-select');
     const solName = solSelect ? (solSelect.options[solSelect.selectedIndex]?.text || '') : '';
     const finalSolId = solSelect ? solSelect.value : (lockedSolicitorId || '');
-    if (finalSolId && solName) rawComment += ' | Solicitor: ' + solName;
+    if (finalSolId && solName) rawComment += ' | מתרים: ' + solName; // תוקן מ-Solicitor למתרים
 
     const iframe = document.getElementById('NedarimFrame');
     iframe.contentWindow.postMessage({
@@ -421,8 +424,9 @@ function processPayment() {
             'Mosad': campaignConfig.mosadId,
             'ApiValid': campaignConfig.apiValid,
             'Amount': currentDonationAmount,
-            'FirstName': document.getElementById('fname').value,
-            'LastName': document.getElementById('lname').value,
+            'ClientName': firstNameVal + ' ' + lastNameVal, // מכריח שליחה של שם פרטי ואז משפחה
+            'FirstName': firstNameVal,
+            'LastName': lastNameVal,
             'Mail': emailVal,
             'Phone': phoneVal,
             'Zeout': zeoutVal,
@@ -541,4 +545,4 @@ window.showImage = function(src) {
     document.getElementById('modal-overlay').classList.add('show');
     document.getElementById('custom-modal').classList.add('show');
 };
-`;
+`
