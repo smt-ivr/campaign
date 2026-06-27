@@ -44,7 +44,7 @@ export const htmlContent = `<!DOCTYPE html>
                         <div class="stat-circle">
                             <svg viewBox="0 0 36 36" class="circular-chart">
                                 <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <path class="circle" id="progress-circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path class="circle" id="progress-circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                                 <text x="18" y="20.35" class="percentage" id="progress-text"></text>
                             </svg>
                         </div>
